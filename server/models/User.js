@@ -2,14 +2,8 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const createToken = require('../utils/createToken')
+const commonSchema = require('../utils/commonSchema')
 const createRandomString = require('../utils/createRandomString')
-
-const commonSchema = (required = true) => {
-    return {
-        type: String,
-        required,
-    }
-}
 
 const UserSchema = new mongoose.Schema({
     name: {

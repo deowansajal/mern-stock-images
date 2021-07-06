@@ -10,7 +10,7 @@ const {
     confirmEmail,
     getMe,
     deleteAllUsers,
-} = require('../controllers/auth')
+} = require('../controllers/authController')
 
 const { protect } = require('../middleware/auth')
 

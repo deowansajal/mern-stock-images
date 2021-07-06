@@ -19,31 +19,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 const PORT = process.env.PORT || 4000
 
-const { upload, getFileStream } = require('./middleware/uploadFile')
-
-app.post(
-    '/api/upload',
-    upload.single('image'),
-    async function (req, res, next) {
-        try {
-            return res.status(200).json({
-                reqFile: req.file,
-            })
-        } catch (error) {
-            console.log(error)
-            res.status(400).json({ error })
-        }
-    }
-)
-
-app.get('/api/download', async (req, res, next) => {
-    const { fileStream, url } = getFileStream(
-        '1625566658742Solid Color Fleece Hooded Long Sleeve Thick Coat For Women.jpg'
-    )
-
-    res.json({ message: 'success', url })
-    // res.sendFile(stream)
-})
 // Routes
 routes(app)
 

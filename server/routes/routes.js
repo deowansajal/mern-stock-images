@@ -1,9 +1,14 @@
-const authRouter = require('./auth')
+const authRoute = require('./authRoute')
+const adminRoute = require('./adminRoute')
 
 const routesArray = [
     {
+        path: '/api/admin',
+        route: adminRoute,
+    },
+    {
         path: '/api/auth',
-        route: authRouter,
+        route: authRoute,
     },
 ]
 
