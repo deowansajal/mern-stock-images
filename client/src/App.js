@@ -10,25 +10,48 @@ import Header from './components/layout/Header'
 import AuthProvider from './context/auth-context'
 import PrivateRoute from './components/utils/PrivateRoute'
 import PublicRoute from './components/utils/PublicRoute'
-
+import Admin from './pages/Admin'
+import Cart from './pages/Cart'
+import NotFound from './pages/NotFound'
 const App = () => {
     return (
         <AuthProvider>
             <BrowserRouter>
                 <Header />
-
                 <Switch>
-                    <Route exact path="/">
-                        <Home />
-                    </Route>
+                    <PublicRoute
+                        exact
+                        path="/"
+                        component={Home}
+                        restricted={false}
+                    />
+
+                    <PublicRoute
+                        path="/signup"
+                        component={Signup}
+                        restricted={true}
+                    />
+
+                    <PublicRoute
+                        path="/login"
+                        component={Login}
+                        restricted={true}
+                    />
+
+                    <PublicRoute
+                        restricted={false}
+                        path="/cart"
+                        component={Cart}
+                    />
+
                     <PrivateRoute path="/me" component={Profile} />
-                    <PublicRoute path="/signup" component={Signup} />
-                    <PublicRoute path="/login" component={Login} />
-                    <Route path="*">
-                        <h1 className="display-4 text-center mt-5">
-                            404 Page Not Found
-                        </h1>
-                    </Route>
+                    <PrivateRoute path="/admin" component={Admin} />
+
+                    <PrivateRoute
+                        path="*"
+                        component={NotFound}
+                        restricted={false}
+                    />
                 </Switch>
             </BrowserRouter>
         </AuthProvider>
