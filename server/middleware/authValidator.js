@@ -39,7 +39,7 @@ const nameValidator = () => {
         .withMessage(message.minMax({ name: 'Name', min: 3, max: 30 }))
 }
 
-const registerValidator = [
+const signupValidator = [
     nameValidator(),
     emailValidator(),
     body('role')
@@ -52,6 +52,6 @@ const registerValidator = [
 const loginValidator = [emailValidator(), passwordValidator()]
 
 module.exports = {
-    registerValidator,
+    signupValidator,
     loginValidator,
 }

@@ -10,7 +10,7 @@ const getValidationResult = req => {
     if (!result.isEmpty()) {
         return {
             hasError: true,
-            errors: result.array({ onlyFirstError: true }),
+            errors: result.mapped({ onlyFirstError: true }),
         }
     }
 

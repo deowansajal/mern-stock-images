@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         ...commonSchema(),
-        select: true,
+        select: false,
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,

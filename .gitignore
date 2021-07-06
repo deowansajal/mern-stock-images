@@ -1,5 +1,3 @@
-server/node_modules
-server/config
 /server/node_modules
 /server/config
-
+/server/playground
