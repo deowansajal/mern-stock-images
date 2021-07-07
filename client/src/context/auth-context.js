@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import useHttp from '../hooks/useHttp'
 
-const initialAuthContextData = {
+const initialAuthContext = {
     isAuthenticated: false,
     isLoading: false,
     isRequestSuccess: false,
@@ -16,7 +16,7 @@ const initialAuthContextData = {
     getMe: () => {},
 }
 
-export const AuthContext = React.createContext(initialAuthContextData)
+export const AuthContext = React.createContext(initialAuthContext)
 
 const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)

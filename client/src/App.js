@@ -13,49 +13,52 @@ import PublicRoute from './components/utils/PublicRoute'
 import Admin from './pages/Admin'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
+import ImagesProvider from './context/images-context'
 const App = () => {
     return (
         <AuthProvider>
-            <BrowserRouter>
-                <Header />
-                <main>
-                    <Switch>
-                        <PublicRoute
-                            exact
-                            path="/"
-                            component={Home}
-                            restricted={false}
-                        />
+            <ImagesProvider>
+                <BrowserRouter>
+                    <Header />
+                    <main>
+                        <Switch>
+                            <PublicRoute
+                                exact
+                                path="/"
+                                component={Home}
+                                restricted={false}
+                            />
 
-                        <PublicRoute
-                            path="/signup"
-                            component={Signup}
-                            restricted={true}
-                        />
+                            <PublicRoute
+                                path="/signup"
+                                component={Signup}
+                                restricted={true}
+                            />
 
-                        <PublicRoute
-                            path="/login"
-                            component={Login}
-                            restricted={true}
-                        />
+                            <PublicRoute
+                                path="/login"
+                                component={Login}
+                                restricted={true}
+                            />
 
-                        <PublicRoute
-                            restricted={false}
-                            path="/cart"
-                            component={Cart}
-                        />
+                            <PublicRoute
+                                restricted={false}
+                                path="/cart"
+                                component={Cart}
+                            />
 
-                        <PrivateRoute path="/me" component={Profile} />
-                        <PrivateRoute path="/admin" component={Admin} />
+                            <PrivateRoute path="/me" component={Profile} />
+                            <PrivateRoute path="/admin" component={Admin} />
 
-                        <PrivateRoute
-                            path="*"
-                            component={NotFound}
-                            restricted={false}
-                        />
-                    </Switch>
-                </main>
-            </BrowserRouter>
+                            <PrivateRoute
+                                path="*"
+                                component={NotFound}
+                                restricted={false}
+                            />
+                        </Switch>
+                    </main>
+                </BrowserRouter>
+            </ImagesProvider>
         </AuthProvider>
     )
 }
