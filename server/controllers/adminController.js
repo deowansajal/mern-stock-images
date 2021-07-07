@@ -11,6 +11,8 @@ const s3 = require('../config/s3')
 5
 exports.uploadController = asyncHandler(async (req, res, next) => {
     const { mainImage, thumbnailImage } = req.files
+    console.log('mainImage', mainImage)
+    console.log('thumbnailImage', thumbnailImage)
 
     let imageData = {
         price: req.body.price,

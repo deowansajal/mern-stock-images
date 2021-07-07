@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import useHttp from '../hooks/useHttp'
+import axios from 'axios'
 
 const initialImagesContext = {
     images: [],
@@ -39,10 +40,10 @@ const ImagesProvider = ({ children }) => {
     }
 
     const uploadImage = async formData => {
-        return await sendHttpRequest({
+        return await axios({
             method: 'post',
             url: '/api/admin/upload',
-            formData,
+            data: formData,
             headers: { 'Content-Type': 'multipart/form-data' },
         })
     }
