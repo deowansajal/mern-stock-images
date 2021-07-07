@@ -1,5 +1,6 @@
 const authRoute = require('./authRoute')
 const adminRoute = require('./adminRoute')
+const imageRoute = require('./imageRoute')
 
 const routesArray = [
     {
@@ -9,6 +10,10 @@ const routesArray = [
     {
         path: '/api/auth',
         route: authRoute,
+    },
+    {
+        path: '/api/images',
+        route: imageRoute,
     },
 ]
 

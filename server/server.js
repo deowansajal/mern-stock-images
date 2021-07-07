@@ -3,7 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/db')
 const routes = require('./routes/routes')
-const axios = require('axios')
+const multer = require('multer')
 
 const logMessage = require('./utils/logMessage')
 const app = express()
@@ -22,8 +22,9 @@ const PORT = process.env.PORT || 4000
 routes(app)
 
 app.use((err, req, res, next) => {
-    const { message, error, statusCode, success } = err
+    const { message, error, statusCode = 500, success } = err
 
+    console.log('err.statusCode', statusCode, err instanceof multer.MulterError)
     res.status(statusCode).json({
         success,
         statusCode,

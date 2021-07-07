@@ -1,22 +1,13 @@
-const path = require('path')
 const multer = require('multer')
 
-const generateFilename = file => {
-    return (
-        path.basename(file.originalname, path.extname(file.originalname)) +
-        '-' +
-        Date.now() +
-        path.extname(file.originalname)
-    )
-}
-const des = path.join(__dirname, '..', 'public', 'uploads')
+const imageNameGenerator = require('../utils/imageNameGenerator')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/uploads')
     },
     filename: function (req, file, cb) {
-        cb(null, generateFilename(file))
+        cb(null, imageNameGenerator(file))
     },
 })
 
@@ -28,21 +19,8 @@ const upload = multer({
 })
 
 const uploadFields = upload.fields([
-    { name: 'main', maxCount: 1 },
-    { name: 'thumbnail', maxCount: 1 },
+    { name: 'mainImage', maxCount: 1 },
+    { name: 'thumbnailImage', maxCount: 1 },
 ])
 
 module.exports = uploadFields
-
-// const upload = multer({
-//     storage: multerS3({
-//         s3: s3,
-//         bucket: bucketName,
-//         metadata: function (req, file, cb) {
-//             cb(null, { fieldName: file.fieldname })
-//         },
-//         key: function (req, file, cb) {
-//             cb(null, Date.now().toString() + file.originalname)
-//         },
-//     }),
-// })

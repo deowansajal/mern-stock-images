@@ -21,7 +21,7 @@ exports.deleteAllUsers = asyncHandler(async (req, res, next) => {
 // @route     POST /api/auth/signup
 // @access    Public
 exports.signupController = asyncHandler(async (req, res, next) => {
-    const { hasError, errors } = getValidationResult(req)
+    const { hasError, errors } = getValidationResult({ req })
 
     if (hasError) {
         throw new ErrorResponse({
@@ -109,7 +109,7 @@ exports.confirmEmail = asyncHandler(async (req, res, next) => {
 // @route     POST /api/auth/login
 // @access    Public
 exports.loginController = asyncHandler(async (req, res, next) => {
-    const { hasError, errors } = getValidationResult(req)
+    const { hasError, errors } = getValidationResult({ req })
     if (hasError) {
         throw new ErrorResponse({
             message: 'Invalid Email or Password',

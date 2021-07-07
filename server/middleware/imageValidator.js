@@ -4,9 +4,14 @@ const message = require('../utils/message')
 const commonValidator = require('../utils/commonValidator')
 
 const imageValidator = [
-    commonValidator('key'),
-    commonValidator('originalname'),
-    commonValidator('bucket'),
+    commonValidator('mainImage.key'),
+    commonValidator('mainImage.eTag'),
+    commonValidator('mainImage.bucket'),
+    commonValidator('mainImage.location')
+        .isURL()
+        .withMessage('location must be valid URL'),
+    commonValidator('thumbnailImage.name'),
+    commonValidator('thumbnailImage.path'),
     body('price')
         .notEmpty()
         .withMessage(message.required('price'))
@@ -14,16 +19,6 @@ const imageValidator = [
         .withMessage('price must be number')
         .isInt()
         .withMessage('price must be integer'),
-    commonValidator('location')
-        .isURL()
-        .withMessage('location must be valid URL'),
-    body('size')
-        .notEmpty()
-        .withMessage(message.required('price'))
-        .isNumeric()
-        .withMessage('Size must be number')
-        .isInt()
-        .withMessage('Size must be integer'),
 ]
 
 module.exports = imageValidator
