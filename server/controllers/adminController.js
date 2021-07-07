@@ -5,24 +5,29 @@ const getValidationResult = require('../utils/getValidationResult')
 const Image = require('../models/Image')
 
 exports.uploadController = asyncHandler(async (req, res, next) => {
+    // console.log('top')
     const { errors, hasError } = getValidationResult(req)
-    console.log(req.file)
+    console.log('req.files', req.file)
 
     if (hasError) {
         throw new ErrorResponse({ message: 'Uploading failed', error: errors })
     }
 
-    const { price } = req.body
-    const { key, location, bucket, size, originalname } = req.file
-
-    const image = await Image.create({
-        price,
-        originalname,
-        location,
-        size,
-        bucket,
-        key,
+    sendSuccessResponse({
+        res,
+        message: 'Upload successful',
+        data: req.file,
     })
 
-    sendSuccessResponse({ res, message: 'Upload successful', data: image })
+    // const { price } = req.body
+    // const { key, location, bucket, size, originalname } = req.file
+
+    // const image = await Image.create({
+    //     price,
+    //     originalname,
+    //     location,
+    //     size,
+    //     bucket,
+    //     key,
+    // })
 })

@@ -1,0 +1,15 @@
+.sidebar-wrapper {
+    min-height: 100vh !important;
+    width: 250px !important;
+    margin-top: 4rem;
+}
+.sidebar-list {
+    width: 250px !important;
+    margin-top: 5rem;
+}
+
+.sidebar-list-item {
+    width: 100% !important;
+    background: inherit !important;
+    display: block;
+}

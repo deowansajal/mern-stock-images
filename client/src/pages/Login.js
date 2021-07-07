@@ -1,6 +1,6 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { Form } from 'react-bootstrap'
-import { useHistory, Redirect } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import FormWrapper from '../components/utils/FormWrapper'
 import { AuthContext } from '../context/auth-context'
@@ -19,7 +19,7 @@ const Login = () => {
     const {
         login,
         successMessage,
-        error,
+        error = {},
         errorMessage,
         isLoading,
         setIsAuthenticated,
@@ -39,23 +39,11 @@ const Login = () => {
         enteredUser,
         successToastMessageCloseHandler,
         errorToastMessageCloseHandler,
-        isAuthenticated,
     } = useAuth({
         initialEnteredUser,
         sendHttpRequest: login,
         successCallback,
     })
-
-    // if (isAuthenticated) {
-    //     console.log(isAuthenticated)
-    //     return <Redirect to="/me" />
-    // }
-    useEffect(() => {
-        console.log('isAuthenticated', isAuthenticated)
-        if (isAuthenticated) {
-            return <Redirect to="/me" />
-        }
-    }, [history, isAuthenticated])
 
     return (
         <>

@@ -1,23 +1,9 @@
 import { useContext } from 'react'
 import { Navbar, Nav, Container } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
 
 import { AuthContext } from '../../context/auth-context'
 
-import styles from './Header.module.css'
-
-const NavItem = ({ to, children, ...props }) => {
-    return (
-        <NavLink
-            {...props}
-            className={styles.link}
-            activeClassName={styles['active-class']}
-            to={to}
-        >
-            {children}
-        </NavLink>
-    )
-}
+import NavItem from '../navItem/NavItem'
 
 const Header = () => {
     const { isAuthenticated, logout } = useContext(AuthContext)
@@ -25,7 +11,7 @@ const Header = () => {
     return (
         <header className="bg-dark">
             <Container>
-                <Navbar variant="dark" expand="md">
+                <Navbar variant="dark" expand="lg">
                     <Nav.Link href="/">
                         <Navbar.Brand className="text-light">Logo</Navbar.Brand>
                     </Nav.Link>
@@ -35,10 +21,20 @@ const Header = () => {
                             {isAuthenticated && (
                                 <NavItem to="me">Profile</NavItem>
                             )}
-
                             {isAuthenticated && (
                                 <NavItem to="/login" onClick={logout}>
                                     Logout
+                                </NavItem>
+                            )}{' '}
+                            {isAuthenticated && (
+                                <NavItem to="/admin">Admin</NavItem>
+                            )}
+                            {isAuthenticated && (
+                                <NavItem to="/customers">Customers</NavItem>
+                            )}{' '}
+                            {isAuthenticated && (
+                                <NavItem to="/image-upload">
+                                    Image Upload
                                 </NavItem>
                             )}
                             {!isAuthenticated && (

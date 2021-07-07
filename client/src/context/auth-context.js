@@ -12,6 +12,8 @@ const initialAuthContextData = {
     error: {},
     signup: (name, email, password) => {},
     login: (email, password) => {},
+    logout: () => {},
+    getMe: () => {},
 }
 
 export const AuthContext = React.createContext(initialAuthContextData)

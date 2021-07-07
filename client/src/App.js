@@ -18,41 +18,43 @@ const App = () => {
         <AuthProvider>
             <BrowserRouter>
                 <Header />
-                <Switch>
-                    <PublicRoute
-                        exact
-                        path="/"
-                        component={Home}
-                        restricted={false}
-                    />
+                <main>
+                    <Switch>
+                        <PublicRoute
+                            exact
+                            path="/"
+                            component={Home}
+                            restricted={false}
+                        />
 
-                    <PublicRoute
-                        path="/signup"
-                        component={Signup}
-                        restricted={true}
-                    />
+                        <PublicRoute
+                            path="/signup"
+                            component={Signup}
+                            restricted={true}
+                        />
 
-                    <PublicRoute
-                        path="/login"
-                        component={Login}
-                        restricted={true}
-                    />
+                        <PublicRoute
+                            path="/login"
+                            component={Login}
+                            restricted={true}
+                        />
 
-                    <PublicRoute
-                        restricted={false}
-                        path="/cart"
-                        component={Cart}
-                    />
+                        <PublicRoute
+                            restricted={false}
+                            path="/cart"
+                            component={Cart}
+                        />
 
-                    <PrivateRoute path="/me" component={Profile} />
-                    <PrivateRoute path="/admin" component={Admin} />
+                        <PrivateRoute path="/me" component={Profile} />
+                        <PrivateRoute path="/admin" component={Admin} />
 
-                    <PrivateRoute
-                        path="*"
-                        component={NotFound}
-                        restricted={false}
-                    />
-                </Switch>
+                        <PrivateRoute
+                            path="*"
+                            component={NotFound}
+                            restricted={false}
+                        />
+                    </Switch>
+                </main>
             </BrowserRouter>
         </AuthProvider>
     )

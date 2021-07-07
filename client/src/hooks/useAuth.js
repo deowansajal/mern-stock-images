@@ -36,14 +36,12 @@ const useAuth = ({ initialEnteredUser, sendHttpRequest, successCallback }) => {
 
         sendHttpRequest(enteredUser)
             .then(({ data }) => {
-                console.log(data)
                 setIsLoading(false)
                 setEnteredUser({ ...initialEnteredUser })
                 setSuccessMessage(data.message)
                 successCallback(data.data.token)
             })
             .catch(err => {
-                console.log(err)
                 const { error, message } = err.response.data
                 setError(error)
                 setErrorMessage(message)

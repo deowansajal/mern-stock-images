@@ -1,4 +1,3 @@
-const fs = require('fs')
 require('dotenv').config({ path: './config/config.env' })
 const express = require('express')
 const cors = require('cors')
@@ -24,6 +23,7 @@ routes(app)
 
 app.use((err, req, res, next) => {
     const { message, error, statusCode, success } = err
+
     res.status(statusCode).json({
         success,
         statusCode,
