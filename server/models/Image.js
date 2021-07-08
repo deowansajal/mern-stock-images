@@ -3,6 +3,26 @@ const mongoose = require('mongoose')
 const commonSchema = require('../utils/commonSchema')
 
 const ImageSchema = new mongoose.Schema({
+    name: {
+        ...commonSchema(),
+    },
+    description: {
+        ...commonSchema(),
+    },
+
+    price: {
+        type: Number,
+        required: true,
+    },
+
+    thumbnail: {
+        ...commonSchema(),
+    },
+
+    path: {
+        ...commonSchema(),
+    },
+
     mainImage: {
         eTag: {
             ...commonSchema(),
@@ -16,19 +36,6 @@ const ImageSchema = new mongoose.Schema({
         bucket: {
             ...commonSchema(),
         },
-    },
-    thumbnailImage: {
-        name: {
-            ...commonSchema(),
-        },
-
-        path: {
-            ...commonSchema(),
-        },
-    },
-    price: {
-        type: Number,
-        required: true,
     },
 })
 

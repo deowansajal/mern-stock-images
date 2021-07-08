@@ -20,7 +20,7 @@ const upload = multer({
 
 const uploadFields = upload.fields([
     { name: 'mainImage', maxCount: 1 },
-    { name: 'thumbnailImage', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 1 },
 ])
 
 module.exports = uploadFields

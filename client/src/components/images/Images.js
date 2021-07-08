@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { ImagesContext } from '../../context/images-context'
-import { Image } from 'react-bootstrap'
+import { Image, Col, Row, Container } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 
 import styles from './Images.module.css'
@@ -22,17 +22,16 @@ const Images = () => {
     }
     return (
         <div className={`${styles['images-container']}`}>
-            {images.map(({ thumbnailImage, id }) => {
-                return (
-                    <NavLink to={`${id}`}>
+            {images.map(({ thumbnail, _id: id }) => (
+                <div style={{ maxWidth: 400 }}>
+                    <NavLink to={`/${id}`}>
                         <Image
-                            className="w-100 mb-4"
-                            src={`uploads/${thumbnailImage.name}`}
-                            alt={`${thumbnailImage.name}`}
+                            src={`uploads/${thumbnail}`}
+                            className="w-100 "
                         />
                     </NavLink>
-                )
-            })}
+                </div>
+            ))}
         </div>
     )
 }

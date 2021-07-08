@@ -10,21 +10,21 @@ const s3 = require('../config/s3')
 
 5
 exports.uploadController = asyncHandler(async (req, res, next) => {
-    const { mainImage, thumbnailImage } = req.files
-    console.log('mainImage', mainImage)
-    console.log('thumbnailImage', thumbnailImage)
+    const { mainImage, thumbnail } = req.files
+
+    const { name, price, description } = req.body
 
     let imageData = {
-        price: req.body.price,
+        name,
+        price,
+        description,
     }
 
-    if (thumbnailImage) {
+    if (thumbnail) {
         imageData = {
             ...imageData,
-            thumbnailImage: {
-                name: thumbnailImage[0].filename,
-                path: thumbnailImage[0].path,
-            },
+            path: thumbnail[0].path,
+            thumbnail: thumbnail[0].filename,
         }
     }
 
@@ -42,7 +42,6 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
     }
 
     req.body = {
-        ...req.body,
         ...imageData,
     }
 
@@ -63,8 +62,10 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
         res,
         message: 'Upload successful',
         data: {
-            price: newImage.price,
-            thumbnail: newImage.thumbnailImage.name,
+            name,
+            price,
+            description,
+            thumbnail: newImage.thumbnail,
             id: newImage.id,
         },
     })

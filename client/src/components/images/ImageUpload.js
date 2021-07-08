@@ -6,7 +6,7 @@ import FormWrapper from '../utils/FormWrapper'
 import { ImagesContext } from '../../context/images-context'
 
 const initialImageTextData = {
-    imageName: '',
+    name: '',
     price: '',
     description: '',
 }
@@ -14,21 +14,21 @@ const initialImageTextData = {
 const ImageUpload = () => {
     const [filename, setFilename] = useState('Chose images...')
     const [mainImage, setMainImage] = useState(null)
-    const [thumbnailImage, setThumbnailImage] = useState(null)
+    const [thumbnail, setThumbnail] = useState(null)
     const [imageTextData, setImageTextData] = useState({
         ...initialImageTextData,
     })
 
-    const { uploadImage } = useContext(ImagesContext)
+    const { uploadImage, images } = useContext(ImagesContext)
 
     const fileChangeHandler = e => {
         const thumbnail = e.target.files[0]
-        const image = e.target.files[1]
+        const mainImage = e.target.files[1]
 
-        if (image && thumbnail) {
-            setFilename(`${image.name}, ${thumbnail.name}`)
-            setMainImage(image)
-            setThumbnailImage(thumbnail)
+        if (mainImage && thumbnail) {
+            setFilename(`${mainImage.name}, ${thumbnail.name}`)
+            setMainImage(mainImage)
+            setThumbnail(thumbnail)
         }
 
         e.target.value = null
@@ -38,17 +38,18 @@ const ImageUpload = () => {
         e.preventDefault()
         const formData = new FormData()
         formData.append('mainImage', mainImage)
-        formData.append('thumbnailImage', thumbnailImage)
-        formData.append('imageName', imageTextData.imageName)
+        formData.append('thumbnail', thumbnail)
+        formData.append('name', imageTextData.name)
         formData.append('price', imageTextData.price)
         formData.append('description', imageTextData.description)
         const uploadResult = await uploadImage(formData)
-        console.log('uploadResult', uploadResult)
+
+        console.log('uploadResult', uploadResult, images)
     }
 
     const changeHandler = e => {
         setImageTextData(previousImageTextData => {
-            return { ...imageTextData, [e.target.name]: e.target.value }
+            return { ...previousImageTextData, [e.target.name]: e.target.value }
         })
     }
     return (
@@ -74,10 +75,10 @@ const ImageUpload = () => {
                 <FormControlGroup
                     onChange={changeHandler}
                     required
-                    name="imageName"
-                    label="ImageName"
-                    controlId="imageName"
-                    value={imageTextData.imageName}
+                    name="name"
+                    label="Name"
+                    controlId="name"
+                    value={imageTextData.name}
                     // isInvalid={error.email}
                     // feedback={error.email && error.email.email}
                 />

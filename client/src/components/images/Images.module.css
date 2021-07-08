@@ -1,4 +1,10 @@
-@media screen and (min-width: 576px) {
+.images-container {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+}
+
+/* @media screen and (min-width: 576px) {
     .images-container {
         -webkit-column-count: 1;
         -moz-column-count: 1;
@@ -16,9 +22,5 @@
     }
 }
 @media screen and (min-width: 1200px) {
-    .images-container {
-        -webkit-column-count: 3;
-        -moz-column-count: 3;
-        column-count: 3;
-    }
-}
+  
+} */
