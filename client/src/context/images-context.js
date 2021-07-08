@@ -53,6 +53,15 @@ const ImagesProvider = ({ children }) => {
         })
     }
 
+    useEffect(() => {
+        const loadImages = async () => {
+            const { data } = await getAllImages()
+            setImages(data.images)
+            setImages(data.images)
+        }
+        loadImages()
+    }, [getAllImages, setImages])
+
     const value = {
         images,
         setImages,
@@ -72,7 +81,7 @@ const ImagesProvider = ({ children }) => {
 
     return (
         <ImagesContext.Provider value={value}>
-            {!isLoading && children}
+            {children}
         </ImagesContext.Provider>
     )
 }

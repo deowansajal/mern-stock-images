@@ -6,6 +6,8 @@ import FormWrapper from '../forms/FormWrapper'
 import FormTitle from '../forms/FormTitle'
 import { ImagesContext } from '../../context/images-context'
 
+import ToastMessage from '../utils/ToastMessage'
+
 const initialImageTextData = {
     name: '',
     price: '',
@@ -20,7 +22,17 @@ const ImageUpload = () => {
         ...initialImageTextData,
     })
 
-    const { uploadImage, images, setIsLoading } = useContext(ImagesContext)
+    const {
+        uploadImage,
+        successMessage,
+        setSuccessMessage,
+        errorMessage,
+        setError,
+        setErrorMessage,
+        setImages,
+        setIsLoading,
+        isLoading,
+    } = useContext(ImagesContext)
 
     const fileChangeHandler = e => {
         const thumbnail = e.target.files[0]
@@ -44,10 +56,19 @@ const ImageUpload = () => {
         formData.append('name', imageTextData.name)
         formData.append('price', imageTextData.price)
         formData.append('description', imageTextData.description)
-        const uploadResult = await uploadImage(formData)
-        setIsLoading(false)
+        const { data } = await uploadImage(formData).catch(err => {
+            const { error, message } = err.response.data
+            setError(error)
+            setErrorMessage(message)
+        })
 
-        console.log('uploadResult', uploadResult, images)
+        setImages(previousImages => {
+            return [...previousImages, { ...data.data }]
+        })
+        setSuccessMessage(data.message)
+        setImageTextData({ ...initialImageTextData })
+
+        setIsLoading(false)
     }
 
     const changeHandler = e => {
@@ -55,8 +76,26 @@ const ImageUpload = () => {
             return { ...previousImageTextData, [e.target.name]: e.target.value }
         })
     }
+
+    const successToastMessageCloseHandler = e => setSuccessMessage('')
+    const errorToastMessageCloseHandler = e => setErrorMessage('')
+
     return (
-        <FormWrapper>
+        <FormWrapper isLoading={isLoading}>
+            {errorMessage && (
+                <ToastMessage
+                    message={errorMessage}
+                    variant="danger"
+                    onClose={errorToastMessageCloseHandler}
+                />
+            )}
+            {successMessage && (
+                <ToastMessage
+                    message={successMessage}
+                    variant="success"
+                    onClose={successToastMessageCloseHandler}
+                />
+            )}
             <FormTitle title="Upload Images" className="mb-5" />
             <Form onSubmit={submitHandler}>
                 <Form.Group className="custom-file mb-3">

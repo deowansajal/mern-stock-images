@@ -1,15 +1,10 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 
-import ImageUpload from '../components/images/ImageUpload'
-
 const Admin = () => {
     return (
         <Container className="mt-5">
-            <div className="m-auto ">
-                {/* <ImageUpload /> */}
-                Admin
-            </div>
+            <div className="m-auto ">Admin</div>
         </Container>
     )
 }

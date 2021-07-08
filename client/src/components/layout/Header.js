@@ -32,7 +32,6 @@ const Header = () => {
             </>
         )
     }
-    console.log('isAuthenticated', isAuthenticated)
     return (
         <header className="bg-dark">
             <Container>
