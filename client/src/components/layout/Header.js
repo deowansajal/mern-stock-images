@@ -6,8 +6,33 @@ import { AuthContext } from '../../context/auth-context'
 import NavItem from '../navItem/NavItem'
 
 const Header = () => {
-    const { isAuthenticated, logout } = useContext(AuthContext)
+    const { isAuthenticated, logout, user } = useContext(AuthContext)
 
+    let navItems = (
+        <>
+            <NavItem to="/signup">Signup</NavItem>
+            <NavItem to="/login">Login</NavItem>
+        </>
+    )
+
+    if (isAuthenticated && user && user.role !== 'admin') {
+        navItems = (
+            <>
+                <NavItem to="me">Profile</NavItem>
+            </>
+        )
+    }
+
+    if (isAuthenticated && user && user.role === 'admin') {
+        navItems = (
+            <>
+                <NavItem to="/admin">Admin</NavItem>
+                <NavItem to="/admin/upload">Add Image</NavItem>
+                <NavItem to="/customers">Customers</NavItem>
+            </>
+        )
+    }
+    console.log('isAuthenticated', isAuthenticated)
     return (
         <header className="bg-dark">
             <Container>
@@ -18,32 +43,15 @@ const Header = () => {
                     <Navbar.Toggle />
                     <Navbar.Collapse>
                         <Nav className="ml-auto">
-                            {isAuthenticated && (
-                                <NavItem to="me">Profile</NavItem>
-                            )}
+                            {navItems}
                             {isAuthenticated && (
                                 <NavItem to="/login" onClick={logout}>
                                     Logout
                                 </NavItem>
-                            )}{' '}
-                            {isAuthenticated && (
-                                <NavItem to="/admin">Admin</NavItem>
                             )}
-                            {isAuthenticated && (
-                                <NavItem to="/customers">Customers</NavItem>
-                            )}{' '}
-                            {isAuthenticated && (
-                                <NavItem to="/image-upload">
-                                    Image Upload
-                                </NavItem>
+                            {user.role !== 'admin' && (
+                                <NavItem to="/cart">Cart</NavItem>
                             )}
-                            {!isAuthenticated && (
-                                <NavItem to="/signup">Signup</NavItem>
-                            )}
-                            {!isAuthenticated && (
-                                <NavItem to="/login">Login</NavItem>
-                            )}
-                            <NavItem to="/cart">Cart</NavItem>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

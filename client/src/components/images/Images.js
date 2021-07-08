@@ -23,7 +23,7 @@ const Images = () => {
     return (
         <div className={`${styles['images-container']}`}>
             {images.map(({ thumbnail, _id: id }) => (
-                <div style={{ maxWidth: 400 }}>
+                <div style={{ maxWidth: 400 }} className="mb-3">
                     <NavLink to={`/${id}`}>
                         <Image
                             src={`uploads/${thumbnail}`}

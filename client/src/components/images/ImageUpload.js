@@ -2,7 +2,8 @@ import { useState, useContext } from 'react'
 import { Form, FormControl, FormLabel } from 'react-bootstrap'
 import SubmitButton from '../forms/SubmitButton'
 import FormControlGroup from '../forms/FormControlGroup'
-import FormWrapper from '../utils/FormWrapper'
+import FormWrapper from '../forms/FormWrapper'
+import FormTitle from '../forms/FormTitle'
 import { ImagesContext } from '../../context/images-context'
 
 const initialImageTextData = {
@@ -19,7 +20,7 @@ const ImageUpload = () => {
         ...initialImageTextData,
     })
 
-    const { uploadImage, images } = useContext(ImagesContext)
+    const { uploadImage, images, setIsLoading } = useContext(ImagesContext)
 
     const fileChangeHandler = e => {
         const thumbnail = e.target.files[0]
@@ -36,6 +37,7 @@ const ImageUpload = () => {
 
     const submitHandler = async e => {
         e.preventDefault()
+        setIsLoading(true)
         const formData = new FormData()
         formData.append('mainImage', mainImage)
         formData.append('thumbnail', thumbnail)
@@ -43,6 +45,7 @@ const ImageUpload = () => {
         formData.append('price', imageTextData.price)
         formData.append('description', imageTextData.description)
         const uploadResult = await uploadImage(formData)
+        setIsLoading(false)
 
         console.log('uploadResult', uploadResult, images)
     }
@@ -53,12 +56,9 @@ const ImageUpload = () => {
         })
     }
     return (
-        <Form
-            style={{ maxWidth: '400px' }}
-            onSubmit={submitHandler}
-            className="d-flex m-auto"
-        >
-            <div className="w-100  mt-5">
+        <FormWrapper>
+            <FormTitle title="Upload Images" className="mb-5" />
+            <Form onSubmit={submitHandler}>
                 <Form.Group className="custom-file mb-3">
                     <FormControl
                         autoFocus
@@ -106,8 +106,8 @@ const ImageUpload = () => {
                 />
 
                 <SubmitButton>Submit</SubmitButton>
-            </div>
-        </Form>
+            </Form>
+        </FormWrapper>
     )
 }
 

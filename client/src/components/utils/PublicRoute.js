@@ -6,10 +6,16 @@ const PublicRoute = ({ component: Component, restricted, ...rest }) => {
     const { isAuthenticated } = React.useContext(AuthContext)
     return (
         <Route
+            exact
             {...rest}
-            render={props =>
+            render={({ location, ...props }) =>
                 isAuthenticated && restricted ? (
-                    <Redirect to="/me" />
+                    <Redirect
+                        to={{
+                            pathname: '/admin',
+                            state: { from: location },
+                        }}
+                    />
                 ) : (
                     <Component {...props} />
                 )

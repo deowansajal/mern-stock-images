@@ -9,11 +9,13 @@ import Home from './pages/Home'
 import Header from './components/layout/Header'
 import AuthProvider from './context/auth-context'
 import PrivateRoute from './components/utils/PrivateRoute'
+import AdminRoute from './components/utils/AdminRoute'
 import PublicRoute from './components/utils/PublicRoute'
 import Admin from './pages/Admin'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
 import ImagesProvider from './context/images-context'
+import ImageUpload from './components/images/ImageUpload'
 const App = () => {
     return (
         <AuthProvider>
@@ -47,9 +49,13 @@ const App = () => {
                                 component={Cart}
                             />
 
-                            <PrivateRoute path="/me" component={Profile} />
-                            <PrivateRoute path="/admin" component={Admin} />
+                            <AdminRoute
+                                path="/admin/upload"
+                                component={ImageUpload}
+                            />
+                            <AdminRoute exact path="/admin" component={Admin} />
 
+                            <PrivateRoute path="/me" component={Profile} />
                             <PrivateRoute
                                 path="*"
                                 component={NotFound}

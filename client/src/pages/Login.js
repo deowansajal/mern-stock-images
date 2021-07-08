@@ -2,11 +2,13 @@ import { useContext } from 'react'
 import { Form } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 
-import FormWrapper from '../components/utils/FormWrapper'
+import FormWrapper from '../components/forms/FormWrapper'
 import { AuthContext } from '../context/auth-context'
 import ToastMessage from '../components/utils/ToastMessage'
 import FormControlGroup from '../components/forms/FormControlGroup'
 import SubmitButton from '../components/forms/SubmitButton'
+import LinkButton from '../components/forms/LinkButton'
+import FormTitle from '../components/forms/FormTitle'
 import useAuth from '../hooks/useAuth'
 
 const initialEnteredUser = {
@@ -61,11 +63,8 @@ const Login = () => {
                     onClose={successToastMessageCloseHandler}
                 />
             )}
-            <FormWrapper
-                title="Login"
-                to="/login"
-                linkText=" Already have an account ?   ( Login here )"
-            >
+            <FormWrapper isLoading={isLoading}>
+                <FormTitle title="Login" />
                 <Form onSubmit={submitHandler}>
                     <FormControlGroup
                         onChange={changeHandler}
@@ -91,7 +90,10 @@ const Login = () => {
                         feedback={error.password && error.password.password}
                     />
 
-                    <SubmitButton disabled={isLoading}>Submit</SubmitButton>
+                    <SubmitButton>Submit</SubmitButton>
+                    <LinkButton text="Signup" to="/signup">
+                        Don't have an account yet ?
+                    </LinkButton>
                 </Form>
             </FormWrapper>
         </>

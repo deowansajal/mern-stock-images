@@ -7,7 +7,8 @@ const Admin = () => {
     return (
         <Container className="mt-5">
             <div className="m-auto ">
-                <ImageUpload />
+                {/* <ImageUpload /> */}
+                Admin
             </div>
         </Container>
     )

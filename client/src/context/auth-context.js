@@ -19,7 +19,8 @@ const initialAuthContext = {
 export const AuthContext = React.createContext(initialAuthContext)
 
 const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const token = localStorage.getItem('token')
+    const [isAuthenticated, setIsAuthenticated] = useState(token)
     const [user, setUser] = useState({})
     const [error, setError] = useState({})
     const [successMessage, setSuccessMessage] = useState('')
@@ -56,6 +57,7 @@ const AuthProvider = ({ children }) => {
                 setUser(data.data)
             })
             .catch(err => {
+                console.log(err)
                 const { error, message } = err.response.data
                 setError(error)
                 setErrorMessage(message)
@@ -82,11 +84,12 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token')
+        console.log(token)
         if (token && token !== 'undefined' && token !== null) {
-            setIsAuthenticated(true)
+            // setIsAuthenticated(true)
             getMe()
         } else {
-            setIsAuthenticated(false)
+            // setIsAuthenticated(false)
         }
     }, [getMe])
 

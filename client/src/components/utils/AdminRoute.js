@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { AuthContext } from '../../context/auth-context'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const AdminRoute = ({ component: Component, ...rest }) => {
     const { isAuthenticated, user } = React.useContext(AuthContext)
     return (
         <Route
@@ -19,12 +19,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                         />
                     )
                 }
-
-                if (isAuthenticated && user.role && user.role === 'admin') {
+                if (isAuthenticated && user.role && user.role !== 'admin') {
                     return (
                         <Redirect
                             to={{
-                                pathname: '/admin',
+                                pathname: '/me',
                                 state: { from: location },
                             }}
                         />
@@ -36,4 +35,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         />
     )
 }
-export default PrivateRoute
+export default AdminRoute
