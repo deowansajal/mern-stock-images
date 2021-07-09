@@ -4,6 +4,7 @@ import { Navbar, Nav, Container } from 'react-bootstrap'
 import { AuthContext } from '../../context/auth-context'
 
 import NavItem from '../navItem/NavItem'
+import Icon from '../utils/Icon'
 
 const Header = () => {
     const { isAuthenticated, logout, user } = useContext(AuthContext)
@@ -27,8 +28,7 @@ const Header = () => {
         navItems = (
             <>
                 <NavItem to="/admin">Admin</NavItem>
-                <NavItem to="/admin/upload">Add Image</NavItem>
-                <NavItem to="/customers">Customers</NavItem>
+                <NavItem to="/admin/customers">Customers</NavItem>
             </>
         )
     }
@@ -37,7 +37,9 @@ const Header = () => {
             <Container>
                 <Navbar variant="dark" expand="lg">
                     <Nav.Link href="/">
-                        <Navbar.Brand className="text-light">Logo</Navbar.Brand>
+                        <Navbar.Brand className="text-light p-0">
+                            Logo
+                        </Navbar.Brand>
                     </Nav.Link>
                     <Navbar.Toggle />
                     <Navbar.Collapse>
@@ -49,7 +51,9 @@ const Header = () => {
                                 </NavItem>
                             )}
                             {user.role !== 'admin' && (
-                                <NavItem to="/cart">Cart</NavItem>
+                                <NavItem to="/cart">
+                                    <Icon name="shopping_cart" />
+                                </NavItem>
                             )}
                         </Nav>
                     </Navbar.Collapse>

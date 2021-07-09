@@ -58,7 +58,6 @@ const AuthProvider = ({ children }) => {
                 setUser(data.data)
             })
             .catch(err => {
-                console.log(err)
                 const { error, message } = err.response.data
                 setError(error)
                 setErrorMessage(message)

@@ -5,8 +5,8 @@ const LinkButton = ({ to, text, children }) => {
     return (
         <p className="mt-4">
             {children}
-            <Link to={to} className="ml-2">
-                ( {text} )
+            <Link to={to} className="ml-2 font-weight-bold text-uppercase">
+                {text}
             </Link>
         </p>
     )

@@ -7,7 +7,6 @@ const emailValidator = () => {
     return body('email')
         .notEmpty()
         .withMessage(message.required('Email'))
-
         .isEmail()
         .withMessage(message.notValid('Email'))
         .normalizeEmail()
@@ -30,9 +29,8 @@ const signupValidator = [
     emailValidator(),
     body('role')
         .optional()
-        .not()
-        .isIn(['user', 'admin'])
-        .withMessage('User role should be user or admin'),
+        .isIn(['user'])
+        .withMessage('Yor can not signup as admin'),
     passwordValidator(),
 ]
 const loginValidator = [emailValidator(), passwordValidator()]

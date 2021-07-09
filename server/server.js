@@ -25,10 +25,11 @@ app.use((err, req, res, next) => {
     const { message, error, statusCode = 500, success } = err
 
     if (statusCode === 500 || statusCode > 500) {
+        console.log(err.message)
         return res.status(statusCode).json({ message: 'An error occurred' })
     }
 
-    console.log(message)
+    console.log(message, error)
 
     console.log('err.statusCode', statusCode, err instanceof multer.MulterError)
     res.status(statusCode).json({

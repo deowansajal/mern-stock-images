@@ -86,7 +86,7 @@ const Signup = () => {
 
                     <SubmitButton>Submit</SubmitButton>
                     <LinkButton to="/login" text="Login">
-                        Already have an account
+                        Already have an account ?
                     </LinkButton>
                 </Form>
             </FormWrapper>

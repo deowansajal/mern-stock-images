@@ -8,10 +8,8 @@ const getValidationResult = require('../utils/getValidationResult')
 const Image = require('../models/Image')
 const s3 = require('../config/s3')
 
-5
 exports.uploadController = asyncHandler(async (req, res, next) => {
     const { mainImage, thumbnail } = req.files
-
     const { name, price, description } = req.body
 
     let imageData = {
@@ -28,8 +26,11 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
         }
     }
 
+    let s3File
+
     if (mainImage) {
         const s3Res = await s3.uploadFile(mainImage[0])
+
         imageData = {
             ...imageData,
             mainImage: {
@@ -56,7 +57,7 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
 
     const newImage = await Image.create({ ...imageData })
 
-    fs.promises.unlink(mainImage[0].path)
+    await fs.promises.unlink(mainImage[0].path)
 
     sendSuccessResponse({
         res,

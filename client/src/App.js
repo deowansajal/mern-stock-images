@@ -1,7 +1,6 @@
 import { BrowserRouter, Switch } from 'react-router-dom'
 
 import './App.css'
-
 import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
@@ -12,10 +11,11 @@ import PrivateRoute from './components/utils/PrivateRoute'
 import AdminRoute from './components/utils/AdminRoute'
 import PublicRoute from './components/utils/PublicRoute'
 import Admin from './pages/Admin'
+import Customers from './pages/Customers'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
 import ImagesProvider from './context/images-context'
-import ImageUpload from './components/images/ImageUpload'
+
 const App = () => {
     return (
         <AuthProvider>
@@ -50,8 +50,8 @@ const App = () => {
                             />
 
                             <AdminRoute
-                                path="/admin/upload"
-                                component={ImageUpload}
+                                path="/admin/customers"
+                                component={Customers}
                             />
                             <AdminRoute exact path="/admin" component={Admin} />
 

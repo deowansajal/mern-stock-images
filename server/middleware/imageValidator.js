@@ -12,7 +12,6 @@ const imageValidator = [
         .withMessage(
             message.minMax({ name: 'description', min: 5, max: 5000 })
         ),
-    ,
     body('price')
         .notEmpty()
         .withMessage(message.required('price'))
