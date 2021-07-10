@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import './App.css'
 import Signup from './pages/Signup'
@@ -15,57 +15,73 @@ import Customers from './pages/Customers'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
 import ImagesProvider from './context/images-context'
+import ImageDetails from './pages/ImageDetails'
+import Checkout from './pages/Checkout'
+import Footer from './components/layout/Footer'
 
 const App = () => {
     return (
-        <AuthProvider>
-            <ImagesProvider>
-                <BrowserRouter>
-                    <Header />
-                    <main>
-                        <Switch>
-                            <PublicRoute
-                                exact
-                                path="/"
-                                component={Home}
-                                restricted={false}
-                            />
+        <>
+            <AuthProvider>
+                <ImagesProvider>
+                    <BrowserRouter>
+                        <Header />
+                        <main>
+                            <Switch>
+                                <PublicRoute
+                                    exact
+                                    path="/"
+                                    component={Home}
+                                    restricted={false}
+                                />
 
-                            <PublicRoute
-                                path="/signup"
-                                component={Signup}
-                                restricted={true}
-                            />
+                                <PublicRoute
+                                    path="/signup"
+                                    component={Signup}
+                                    restricted={true}
+                                />
 
-                            <PublicRoute
-                                path="/login"
-                                component={Login}
-                                restricted={true}
-                            />
+                                <PublicRoute
+                                    path="/login"
+                                    component={Login}
+                                    restricted={true}
+                                />
 
-                            <PublicRoute
-                                restricted={false}
-                                path="/cart"
-                                component={Cart}
-                            />
+                                <PublicRoute
+                                    exact
+                                    restricted={false}
+                                    path="/cart"
+                                    component={Cart}
+                                />
 
-                            <AdminRoute
-                                path="/admin/customers"
-                                component={Customers}
-                            />
-                            <AdminRoute exact path="/admin" component={Admin} />
+                                <Route
+                                    path="/cart/checkout"
+                                    component={Checkout}
+                                />
 
-                            <PrivateRoute path="/me" component={Profile} />
-                            <PrivateRoute
-                                path="*"
-                                component={NotFound}
-                                restricted={false}
-                            />
-                        </Switch>
-                    </main>
-                </BrowserRouter>
-            </ImagesProvider>
-        </AuthProvider>
+                                <PublicRoute
+                                    exact
+                                    path="/images/:id"
+                                    component={ImageDetails}
+                                    restricted={false}
+                                />
+
+                                <PrivateRoute path="/me" component={Profile} />
+
+                                <AdminRoute path="/admin" component={Admin} />
+                                <AdminRoute
+                                    path="/admin/customers"
+                                    component={Customers}
+                                />
+
+                                <Route path="*" component={NotFound} />
+                            </Switch>
+                        </main>
+                    </BrowserRouter>
+                </ImagesProvider>
+            </AuthProvider>
+            <Footer />
+        </>
     )
 }
 

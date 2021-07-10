@@ -5,7 +5,7 @@ import SingleImage from './SingleImage'
 import styles from './Images.module.css'
 
 const Images = () => {
-    const { images } = useContext(ImagesContext)
+    const { images, setCurrentImage } = useContext(ImagesContext)
 
     if (images.length === 0) {
         return <p>There is no images</p>
@@ -18,6 +18,7 @@ const Images = () => {
                     thumbnail={thumbnail}
                     id={id}
                     name={name}
+                    setCurrentImage={setCurrentImage}
                 />
             ))}
         </div>

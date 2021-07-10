@@ -36,7 +36,6 @@ const useAuth = ({ initialEnteredUser, sendHttpRequest, successCallback }) => {
 
         sendHttpRequest(enteredUser)
             .then(({ data }) => {
-                setIsLoading(false)
                 setEnteredUser({ ...initialEnteredUser })
                 setSuccessMessage(data.message)
                 successCallback(data.data.token)
@@ -45,6 +44,8 @@ const useAuth = ({ initialEnteredUser, sendHttpRequest, successCallback }) => {
                 const { error, message } = err.response.data
                 setError(error)
                 setErrorMessage(message)
+            })
+            .finally(() => {
                 setIsLoading(false)
             })
     }

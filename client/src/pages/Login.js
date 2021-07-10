@@ -16,7 +16,7 @@ const initialEnteredUser = {
     password: '',
 }
 
-const Login = () => {
+const Login = ({ isCheckout , getLoginSuccessConfirmation}) => {
     const history = useHistory()
     const {
         login,
@@ -32,7 +32,11 @@ const Login = () => {
         localStorage.setItem('token', token)
         setIsAuthenticated(true)
         setSuccessMessage('')
-        history.push('/me')
+        
+        if (!isCheckout) {
+            history.push('/me')
+        }
+        
     }
 
     const {
@@ -63,7 +67,7 @@ const Login = () => {
                     onClose={successToastMessageCloseHandler}
                 />
             )}
-            <FormWrapper isLoading={isLoading}>
+            <FormWrapper isLoading={isLoading} isCheckout={isCheckout}>
                 <FormTitle title="Login" />
                 <Form onSubmit={submitHandler}>
                     <FormControlGroup
@@ -91,9 +95,11 @@ const Login = () => {
                     />
 
                     <SubmitButton>Submit</SubmitButton>
-                    <LinkButton text="Signup" to="/signup">
-                        Don't have an account yet ?
-                    </LinkButton>
+                    {!isCheckout && (
+                        <LinkButton text="Signup" to="/signup">
+                            Don't have an account yet ?
+                        </LinkButton>
+                    )}
                 </Form>
             </FormWrapper>
         </>

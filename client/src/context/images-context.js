@@ -18,12 +18,24 @@ const initialImagesContext = {
 
 export const ImagesContext = React.createContext(initialImagesContext)
 
+const getCurrentImage = () => {
+    const image = localStorage.getItem('currentImage')
+
+    if (!image) {
+        return {}
+    }
+
+    return JSON.parse(image)
+}
+
 const ImagesProvider = ({ children }) => {
     const [images, setImages] = useState([])
     const [error, setError] = useState({})
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [currentImageId, setCurrentImageId] = useState(false)
+    const [currentImage, setCurrentImage] = useState(getCurrentImage())
 
     const sendHttpRequest = useHttp()
 
@@ -36,6 +48,7 @@ const ImagesProvider = ({ children }) => {
     const getSingleImage = async imageId => {
         return await sendHttpRequest({
             url: `/api/images/${imageId}`,
+            params: { id: imageId },
         })
     }
 
@@ -77,6 +90,10 @@ const ImagesProvider = ({ children }) => {
         setSuccessMessage,
         isLoading,
         setIsLoading,
+        currentImageId,
+        currentImage,
+        setCurrentImage,
+        setCurrentImageId,
     }
 
     return (

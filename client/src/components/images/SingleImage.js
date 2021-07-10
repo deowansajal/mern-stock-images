@@ -26,18 +26,26 @@ const RoundedIconWrapper = ({ className, style, children }) => {
     )
 }
 
-const SingleImage = ({ id, thumbnail, name }) => {
+const SingleImage = ({ id, thumbnail, name, price, setCurrentImage }) => {
     const [imageContentIsShown, setImageContentIsShown] = useState(false)
 
     const mouseEnterHandler = e => setImageContentIsShown(true)
     const mouseLeaveHandler = e => setImageContentIsShown(false)
 
+    const clickHandler = () => {
+        const currentImage = { id, name, price, thumbnail }
+        setCurrentImage(currentImage)
+        console.log(currentImage)
+        localStorage.setItem('currentImage', JSON.stringify(currentImage))
+    }
+
     return (
         <NavLink
             onMouseEnter={mouseEnterHandler}
             onMouseLeave={mouseLeaveHandler}
-            to={`/${id}`}
+            to={`/images/${id}`}
             className="text-light"
+            onClick={clickHandler}
         >
             <div
                 style={{ maxWidth: 400 }}

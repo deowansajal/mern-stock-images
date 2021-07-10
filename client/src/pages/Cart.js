@@ -1,10 +1,159 @@
-import React from 'react'
+import { useContext, useState } from 'react'
+import classNames from 'classnames'
+
+import {
+    Image,
+    Container,
+    Table,
+    Row,
+    Col,
+    Button,
+    ListGroup,
+} from 'react-bootstrap'
+
+import Icon from '../components/utils/Icon'
+import { ImagesContext } from '../context/images-context'
+import ContainerWrapper from '../components/utils/ContainerWrapper'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../context/auth-context'
+import AuthModal from '../components/modal/AuthModal'
+
+const Th = ({ className, children, ...props }) => {
+    const classes = classNames({
+        [className]: classNames,
+        'border-bottom-0': true,
+    })
+
+    return (
+        <th {...props} className={classes}>
+            {children ? children : null}
+        </th>
+    )
+}
+const Td = ({ className, children, ...props }) => {
+    const classes = classNames({
+        [className]: classNames,
+        'border-bottom-0': true,
+    })
+
+    return (
+        <td {...props} className={classes}>
+            {children ? children : null}
+        </td>
+    )
+}
+
+const tdStyle = {
+    verticalAlign: 'middle',
+}
+
+const CartCheckoutButton = ({ isAuthenticated, modalOpenHandler }) => {
+    if (!isAuthenticated) {
+        return (
+            <Button
+                onClick={modalOpenHandler}
+                className="w-100 text-uppercase mt-4"
+            >
+                Proceed to checkout
+            </Button>
+        )
+    }
+    return (
+        <Link to="/cart/checkout">
+            <Button className="w-100 text-uppercase mt-4">
+                Proceed to checkout
+            </Button>
+        </Link>
+    )
+}
 
 const Cart = () => {
+    const { currentImage } = useContext(ImagesContext)
+    const { isAuthenticated } = useContext(AuthContext)
+    const [isOpen, setIsOpen] = useState(false)
+
+    const modalOpenHandler = e => {
+        if (!isAuthenticated) {
+            setIsOpen(true)
+        }
+    }
+    const modalCloseHandler = e => {
+        setIsOpen(false)
+    }
+
     return (
-        <div>
-            <h1>Cart Component</h1>
-        </div>
+        <>
+            {!isAuthenticated && (
+                <AuthModal isOpen={isOpen} onClose={modalCloseHandler} />
+            )}
+
+            <ContainerWrapper>
+                <Container>
+                    <Row>
+                        <Col lg={7}>
+                            <Table responsive>
+                                <thead className="border-bottom-0">
+                                    <tr>
+                                        <Th>Image and name</Th>
+                                        <Th>price</Th>
+                                        <Th></Th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Array.from({ length: 7 }).map((_, i) => (
+                                        <tr>
+                                            <Td style={tdStyle}>
+                                                <div
+                                                    style={{
+                                                        maxWidth: '120px',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        fluid
+                                                        src={`/uploads/${currentImage.thumbnail}`}
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                name
+                                            </Td>
+                                            <Td style={tdStyle}>22</Td>
+                                            <Td style={tdStyle}>
+                                                <Icon
+                                                    name="close"
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                />
+                                            </Td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </Col>
+                        <Col lg={5}>
+                            <ListGroup>
+                                <ListGroup.Item className="d-flex justify-content-between border-bottom-0">
+                                    <span>Subtotal</span>
+                                    <span>399</span>
+                                </ListGroup.Item>
+                                <ListGroup.Item className="d-flex justify-content-between border-bottom-0">
+                                    <span>Shipping</span>
+                                    <span>Free</span>
+                                </ListGroup.Item>
+                                <ListGroup.Item className="d-flex justify-content-between ">
+                                    <span>Total</span>
+                                    <span>399</span>
+                                </ListGroup.Item>
+                            </ListGroup>
+                            <CartCheckoutButton
+                                isAuthenticated={isAuthenticated}
+                                modalOpenHandler={modalOpenHandler}
+                            />
+                        </Col>
+                    </Row>
+                </Container>
+            </ContainerWrapper>
+        </>
     )
 }
 

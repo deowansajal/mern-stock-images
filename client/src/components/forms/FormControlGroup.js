@@ -12,6 +12,7 @@ const FormControlGroup = ({
     isInvalid,
     feedback,
     onChange,
+    children,
     ...props
 }) => {
     return (
@@ -24,7 +25,9 @@ const FormControlGroup = ({
                 name={name}
                 value={value}
                 isInvalid={isInvalid}
-            />
+            >
+                {children ? children : null}
+            </FormControl>
             {isInvalid && (
                 <FormControl.Feedback type="invalid">
                     {feedback}

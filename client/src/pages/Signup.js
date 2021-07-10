@@ -17,12 +17,17 @@ const initialEnteredUser = {
     password: '',
 }
 
-const Signup = () => {
+const Signup = ({ isCheckout, getSignupSuccessConfirmation }) => {
     const { signup, error, errorMessage, isLoading } = useContext(AuthContext)
     const history = useHistory()
 
     const successCallback = () => {
-        history.push('/login')
+        if (typeof getSignupSuccessConfirmation === 'function') {
+            getSignupSuccessConfirmation(true)
+        }
+        if (!isCheckout) {
+            history.push('/login')
+        }
     }
 
     const {
@@ -46,8 +51,9 @@ const Signup = () => {
                 />
             )}
 
-            <FormWrapper isLoading={isLoading}>
+            <FormWrapper isLoading={isLoading} isCheckout={isCheckout}>
                 <FormTitle title={'Signup'} />
+
                 <Form onSubmit={submitHandler}>
                     <FormControlGroup
                         onChange={changeHandler}
@@ -85,9 +91,11 @@ const Signup = () => {
                     />
 
                     <SubmitButton>Submit</SubmitButton>
-                    <LinkButton to="/login" text="Login">
-                        Already have an account ?
-                    </LinkButton>
+                    {!isCheckout && (
+                        <LinkButton to="/login" text="Login">
+                            Already have an account ?
+                        </LinkButton>
+                    )}
                 </Form>
             </FormWrapper>
         </>

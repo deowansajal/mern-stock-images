@@ -1,0 +1,10 @@
+@media screen and (min-width: 576px) {
+    .modal-content-wrapper {
+        width: 500px;
+    }
+}
+@media screen and (max-width: 576px) {
+    .modal-content-wrapper {
+        width: 280px;
+    }
+}

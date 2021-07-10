@@ -27,6 +27,7 @@ const AuthProvider = ({ children }) => {
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [isRequestSuccess, setIsRequestSuccess] = useState(false)
 
     const sendHttpRequest = useHttp()
 
