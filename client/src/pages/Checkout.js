@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Container, Form } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
 
 import classNames from 'classnames'
@@ -7,7 +6,14 @@ import classNames from 'classnames'
 const Checkout = () => {
     return (
         <ContainerWrapper>
-            <Container></Container>
+            <Container>
+                <Row>
+                    {/* <Col>
+                        <CheckoutForm />
+                    </Col>
+                    <Col>Summary</Col> */}
+                </Row>
+            </Container>
         </ContainerWrapper>
     )
 }

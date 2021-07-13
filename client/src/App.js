@@ -26,7 +26,7 @@ const App = () => {
                 <ImagesProvider>
                     <BrowserRouter>
                         <Header />
-                        <main>
+                        <main style={{ minHeight: 'calc(100vh - 70px)' }}>
                             <Switch>
                                 <PublicRoute
                                     exact
@@ -54,10 +54,7 @@ const App = () => {
                                     component={Cart}
                                 />
 
-                                <Route
-                                    path="/cart/checkout"
-                                    component={Checkout}
-                                />
+                                <Route path="/success" component={Home} />
 
                                 <PublicRoute
                                     exact

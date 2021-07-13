@@ -1,18 +1,26 @@
 require('dotenv').config({ path: './config/config.env' })
+const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/db')
 const routes = require('./routes/routes')
-const multer = require('multer')
+const stripe = require('stripe')
 
 const logMessage = require('./utils/logMessage')
+const webhookController = require('./controllers/webhookController')
 const app = express()
+// app.use('/webhook', express.raw({ type: '*/*' }))
 
-app.use(express.json())
+app.use((req, res, next) => {
+    if (req.originalUrl === '/webhook') {
+        next()
+    } else {
+        express.json()(req, res, next)
+    }
+})
+
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
-
-const path = require('path')
 
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -20,6 +28,13 @@ const PORT = process.env.PORT || 4000
 
 // Routes
 routes(app)
+
+// Initialize webhook route
+app.post(
+    '/webhook',
+    express.raw({ type: 'application/json' }),
+    webhookController
+)
 
 app.use((err, req, res, next) => {
     const { message, error, statusCode = 500, success } = err
@@ -31,7 +46,6 @@ app.use((err, req, res, next) => {
 
     console.log(message, error)
 
-    console.log('err.statusCode', statusCode, err instanceof multer.MulterError)
     res.status(statusCode).json({
         success,
         statusCode,

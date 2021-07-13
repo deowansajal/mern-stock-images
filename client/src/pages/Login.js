@@ -16,7 +16,7 @@ const initialEnteredUser = {
     password: '',
 }
 
-const Login = ({ isCheckout , getLoginSuccessConfirmation}) => {
+const Login = ({ isCheckout, getLoginSuccessConfirmation }) => {
     const history = useHistory()
     const {
         login,
@@ -32,11 +32,12 @@ const Login = ({ isCheckout , getLoginSuccessConfirmation}) => {
         localStorage.setItem('token', token)
         setIsAuthenticated(true)
         setSuccessMessage('')
-        
-        if (!isCheckout) {
-            history.push('/me')
+
+        if (isCheckout) {
+            return getLoginSuccessConfirmation(true)
         }
-        
+
+        history.push('/me')
     }
 
     const {

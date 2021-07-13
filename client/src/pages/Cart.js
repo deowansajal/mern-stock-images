@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react'
 import classNames from 'classnames'
+import { useStripe } from '@stripe/react-stripe-js'
 
 import {
     Image,
@@ -14,9 +15,11 @@ import {
 import Icon from '../components/utils/Icon'
 import { ImagesContext } from '../context/images-context'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
-import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/auth-context'
 import AuthModal from '../components/modal/AuthModal'
+
+import useHttp from '../hooks/useHttp'
+import axios from 'axios'
 
 const Th = ({ className, children, ...props }) => {
     const classes = classNames({
@@ -47,7 +50,11 @@ const tdStyle = {
     verticalAlign: 'middle',
 }
 
-const CartCheckoutButton = ({ isAuthenticated, modalOpenHandler }) => {
+const CartCheckoutButton = ({
+    isAuthenticated,
+    modalOpenHandler,
+    checkoutSubmitHandler,
+}) => {
     if (!isAuthenticated) {
         return (
             <Button
@@ -59,11 +66,12 @@ const CartCheckoutButton = ({ isAuthenticated, modalOpenHandler }) => {
         )
     }
     return (
-        <Link to="/cart/checkout">
-            <Button className="w-100 text-uppercase mt-4">
-                Proceed to checkout
-            </Button>
-        </Link>
+        <Button
+            onClick={checkoutSubmitHandler}
+            className="w-100 text-uppercase mt-4"
+        >
+            Proceed to checkout
+        </Button>
     )
 }
 
@@ -71,6 +79,9 @@ const Cart = () => {
     const { currentImage } = useContext(ImagesContext)
     const { isAuthenticated } = useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false)
+    const sendHttpRequest = useHttp()
+
+    const stripe = useStripe()
 
     const modalOpenHandler = e => {
         if (!isAuthenticated) {
@@ -81,10 +92,44 @@ const Cart = () => {
         setIsOpen(false)
     }
 
+    const checkoutSubmitHandler = e => {
+        axios
+            .post('/api/order/create-checkout-session', {
+                data: {
+                    items: [
+                        {
+                            price_data: {
+                                currency: 'usd',
+                                product_data: {
+                                    name: 'Stubborn Attachments',
+                                    images: ['https://i.imgur.com/EHyR2nP.png'],
+                                },
+                                unit_amount: 2000,
+                            },
+                            quantity: 1,
+                        },
+                    ],
+                },
+            })
+            .then(({ data }) => {
+                return stripe.redirectToCheckout({ sessionId: data.sessionId })
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
+
     return (
         <>
             {!isAuthenticated && (
-                <AuthModal isOpen={isOpen} onClose={modalCloseHandler} />
+                <AuthModal
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    onClose={modalCloseHandler}
+                />
             )}
 
             <ContainerWrapper>
@@ -100,7 +145,7 @@ const Cart = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Array.from({ length: 7 }).map((_, i) => (
+                                    {Array.from({ length: 2 }).map((_, i) => (
                                         <tr>
                                             <Td style={tdStyle}>
                                                 <div
@@ -114,7 +159,9 @@ const Cart = () => {
                                                         alt=""
                                                     />
                                                 </div>
-                                                name
+                                                Lorem ipsum dolor sit amet
+                                                consectetur adipisicing elit.
+                                                Dolor, non.
                                             </Td>
                                             <Td style={tdStyle}>22</Td>
                                             <Td style={tdStyle}>
@@ -145,9 +192,11 @@ const Cart = () => {
                                     <span>399</span>
                                 </ListGroup.Item>
                             </ListGroup>
+
                             <CartCheckoutButton
                                 isAuthenticated={isAuthenticated}
                                 modalOpenHandler={modalOpenHandler}
+                                checkoutSubmitHandler={checkoutSubmitHandler}
                             />
                         </Col>
                     </Row>

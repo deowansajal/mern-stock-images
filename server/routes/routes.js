@@ -5,6 +5,10 @@ const orderRoute = require('./orderRoute')
 
 const routesArray = [
     {
+        path: '/api/order',
+        route: orderRoute,
+    },
+    {
         path: '/api/admin',
         route: adminRoute,
     },
@@ -13,10 +17,7 @@ const routesArray = [
         path: '/api/auth',
         route: authRoute,
     },
-    {
-        path: '/api/order',
-        route: orderRoute,
-    },
+
     {
         path: '/api/images',
         route: imageRoute,

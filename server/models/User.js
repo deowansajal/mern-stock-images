@@ -18,10 +18,20 @@ const UserSchema = new mongoose.Schema({
         enum: ['user'],
         default: 'user',
     },
+
     password: {
         ...commonSchema(),
         select: false,
     },
+
+    subscription: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subscription',
+            required: true,
+        },
+    ],
+
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     confirmEmailToken: String,
