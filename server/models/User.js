@@ -24,13 +24,14 @@ const UserSchema = new mongoose.Schema({
         select: false,
     },
 
-    subscription: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Subscription',
-            required: true,
-        },
-    ],
+    subscription: {
+        subscribed: { type: Boolean, default: false },
+        id: String,
+        status: String,
+        invoicePdf: String,
+        isPaid: { type: Boolean, default: false },
+        currentPeriodStart: { type: Number, required: true, default: 0 },
+    },
 
     resetPasswordToken: String,
     resetPasswordExpire: Date,

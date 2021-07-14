@@ -1,15 +1,9 @@
 const router = require('express').Router()
 
-const {
-    createCheckoutSessionController,
-} = require('../controllers/orderController')
+const { createOrderController } = require('../controllers/orderController')
 
 const { protect } = require('../middleware/auth')
 
-router.post(
-    '/create-checkout-session',
-    protect,
-    createCheckoutSessionController
-)
+router.post('/create-order', protect, createOrderController)
 
 module.exports = router

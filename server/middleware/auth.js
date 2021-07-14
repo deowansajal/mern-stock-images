@@ -8,7 +8,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
     let token
     const { authorization } = req.headers
     if (authorization && authorization.startsWith('Bearer')) {
-        // Set token from Bearer token in header
         token = authorization.split(' ')[1]
     }
 

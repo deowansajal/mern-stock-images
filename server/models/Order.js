@@ -2,9 +2,10 @@ const mongoose = require('mongoose')
 
 const commonSchema = require('../utils/commonSchema')
 
-const orderSchema = mongoose.Schema(
+const OrderSchema = mongoose.Schema(
     {
-        customer: {
+        sessionId: { type: String, required: true },
+        user: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'User',
@@ -13,17 +14,16 @@ const orderSchema = mongoose.Schema(
         orderItems: [
             {
                 price: {
-                    type: [Number, 'Price Should be number'],
-                    required: [true, 'Price is required'],
+                    type: Number,
+                    required: true,
                 },
                 quantity: {
-                    type: [Number, 'Quantity Should be number'],
-                    required: [true, 'Price is required'],
+                    type: Number,
+                    required: true,
                 },
                 name: {
-                    type: [String, 'Name Should be string'],
-                    required: [true, 'Name is required'],
-                    trim: true,
+                    type: String,
+                    required: true,
                 },
             },
         ],
@@ -38,12 +38,6 @@ const orderSchema = mongoose.Schema(
             status: { type: String },
             updateTime: { type: String },
             emailAddress: { type: String },
-        },
-
-        paymentMode: {
-            type: String,
-            enum: ['payment', 'subscription'],
-            required: true,
         },
 
         totalPrice: {
@@ -72,6 +66,4 @@ const orderSchema = mongoose.Schema(
     }
 )
 
-const Order = mongoose.model('Order', orderSchema)
-
-export default Order
+module.exports = mongoose.model('Order', OrderSchema)

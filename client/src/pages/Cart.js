@@ -94,7 +94,7 @@ const Cart = () => {
 
     const checkoutSubmitHandler = e => {
         axios
-            .post('/api/order/create-checkout-session', {
+            .post('/api/create-order', {
                 data: {
                     items: [
                         {
