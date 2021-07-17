@@ -35,7 +35,6 @@ const SingleImage = ({ id, thumbnail, name, price, setCurrentImage }) => {
     const clickHandler = () => {
         const currentImage = { id, name, price, thumbnail }
         setCurrentImage(currentImage)
-        console.log(currentImage)
         localStorage.setItem('currentImage', JSON.stringify(currentImage))
     }
 

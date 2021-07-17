@@ -12,9 +12,10 @@ const Images = () => {
     }
     return (
         <div className={`${styles['images-container']}`}>
-            {images.map(({ thumbnail, _id: id, name }) => (
+            {images.map(({ thumbnail, _id: id, name, price }) => (
                 <SingleImage
                     key={id}
+                    price={price}
                     thumbnail={thumbnail}
                     id={id}
                     name={name}

@@ -1,10 +1,16 @@
 import { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { Image, Container, Row, Col, Button } from 'react-bootstrap'
 
 import { ImagesContext } from '../context/images-context'
+import { CartContext } from '../context/cart-context'
+import priceFormatter from '../components/utils/priceFormatter'
 
 const ImageDetails = () => {
     const { currentImage } = useContext(ImagesContext)
+    const { addToCart, cart } = useContext(CartContext)
+
+    const hasInCart = cart.items.some(item => item.id === currentImage.id)
 
     return (
         <Container className="mt-5">
@@ -32,19 +38,33 @@ const ImageDetails = () => {
                                     <p className="text-uppercase">
                                         {currentImage.name}
                                     </p>
-                                    <h4>$40</h4>
-                                    <p className="lead">
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Velit perspiciatis quo
-                                        blanditiis possimus
-                                    </p>
+                                    <h4>
+                                        {priceFormatter(currentImage.price)}
+                                    </h4>
+                                    <p className="lead">{currentImage.name}</p>
                                     <div className="mt-5">
-                                        <Button
-                                            variant="outline-primary"
-                                            className="w-100 mb-4 "
-                                        >
-                                            Add To Cart
-                                        </Button>
+                                        {!hasInCart && (
+                                            <Button
+                                                onClick={e =>
+                                                    addToCart(currentImage)
+                                                }
+                                                variant="outline-primary"
+                                                className="w-100 mb-4 "
+                                            >
+                                                Add to Cart
+                                            </Button>
+                                        )}
+
+                                        {hasInCart && (
+                                            <Link to="/cart">
+                                                <Button
+                                                    variant="outline-primary"
+                                                    className="w-100 mb-4 "
+                                                >
+                                                    Go to Cart
+                                                </Button>
+                                            </Link>
+                                        )}
                                         <Button
                                             className="w-100 "
                                             variant="danger"

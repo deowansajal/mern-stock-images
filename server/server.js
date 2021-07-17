@@ -9,7 +9,6 @@ const stripe = require('stripe')
 const logMessage = require('./utils/logMessage')
 const webhookController = require('./controllers/webhookController')
 const app = express()
-// app.use('/webhook', express.raw({ type: '*/*' }))
 
 app.use((req, res, next) => {
     if (req.originalUrl === '/webhook') {
