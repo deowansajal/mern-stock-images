@@ -20,7 +20,7 @@ const routesArray = [
     },
 
     {
-        path: '/api',
+        path: '/api/orders',
         route: orderRoute,
     },
 ]

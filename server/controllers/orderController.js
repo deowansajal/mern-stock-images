@@ -5,22 +5,25 @@ const { createSession } = require('../config/stripe')
 
 const asyncHandler = require('../middleware/asyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
+const sendSuccessResponse = require('../utils/sendSuccessResponse')
 
 exports.createOrderController = asyncHandler(async (req, res, next) => {
     const { orderItems } = req.body
     const { email, _id } = req.user
 
+    console.log('Creating orderItems')
+    console.log(' orderItems', orderItems)
+
     const session = await createSession({
         email: email,
         lineItems: orderItems.map(item => ({
-            quantity: item.quantity,
+            quantity: 1,
             amount: item.price,
             currency: 'usd',
             name: item.name,
         })),
     })
 
-    console.log(orderItems)
     const order = await Order.create({
         user: _id,
         sessionId: session.id,
@@ -34,15 +37,18 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
         },
     })
 
-    res.json({ order, url: session.url })
+    res.json({ sessionId: session.id })
+})
 
-    // const { email, _id } = req.user
+exports.getAllOrdersByIdController = asyncHandler(async (req, res, next) => {
+    const orders = await Order.find({ user: req.user._id })
+    console.log(orders)
 
-    // const customer = await Customer.findOne({ userId: _id })
-
-    // if (!customer) {
-    //     throw new ErrorResponse({message: ''})
-    // }
-
-    // res.status(201).json({ sessionId: session.id, session })
+    return sendSuccessResponse({
+        res,
+        message: 'All Order request successful',
+        data: {
+            orders,
+        },
+    })
 })

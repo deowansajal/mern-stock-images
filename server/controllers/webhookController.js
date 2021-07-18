@@ -21,30 +21,6 @@ const setEvent = req => {
     return result
 }
 
-// const createCustomer = async ({ id, name, email }) => {
-//     const customer = await Customer.findOne({ id })
-
-//     if (customer) {
-//         customer.name = name
-//         customer.email = email
-//         const updatedCustomer = await customer.save()
-//         console.log(updatedCustomer)
-//     }
-// }
-
-// const checkoutSubscriptionSessionComplete = async session => {
-//     const subscription = await Subscription.findOne({
-//         sessionId: session.id,
-//     })
-
-//     if (!subscription) {
-//         return res.status(400).send(`Webhook Error: ${err.message}`)
-//     }
-//     subscription.subscription = session.subscription
-//     subscription.paymentStatus = session.payment_status
-//     const savedSubscription = await subscription.save()
-// }
-
 const createCustomer = async session => {
     const customer = await Customer.findOne({
         sessionId: session.id,
@@ -71,8 +47,6 @@ const createCustomer = async session => {
 //     return await subscription.save()
 // }
 
-let count = 0
-
 const webhookController = asyncHandler(async (req, res) => {
     const { event, error: eventError } = setEvent(req)
 
@@ -87,12 +61,11 @@ const webhookController = asyncHandler(async (req, res) => {
             const session = data.object
 
             const order = await Order.findOne({ sessionId: session.id })
-            console.log(session)
+
             if (order && session.payment_status === 'paid') {
                 order.paymentResult.status = session.payment_status
                 order.isPaid = true
                 const savedOrder = await order.save()
-                console.log(savedOrder)
             }
 
             break
@@ -115,7 +88,7 @@ const webhookController = asyncHandler(async (req, res) => {
             break
 
         default:
-            console.log(`event type ${type} index ${++count}`)
+            console.log(`unHandle event type ${type}`)
     }
 
     // Return a res to acknowledge receipt of the event

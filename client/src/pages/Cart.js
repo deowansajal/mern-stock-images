@@ -11,7 +11,7 @@ import AuthModal from '../components/modal/AuthModal'
 import useHttp from '../hooks/useHttp'
 import axios from 'axios'
 import CartItem from '../components/cart/CartItem'
-import { THeader } from '../components/table/table'
+import { THeader } from '../components/table/Table'
 import { Link } from 'react-router-dom'
 import priceFormatter from '../components/utils/priceFormatter'
 
@@ -44,7 +44,6 @@ const Cart = () => {
     const { cart, removeFromCart } = useContext(CartContext)
     const { isAuthenticated } = useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false)
-    const sendHttpRequest = useHttp()
 
     const stripe = useStripe()
 
@@ -59,24 +58,11 @@ const Cart = () => {
 
     const checkoutSubmitHandler = e => {
         axios
-            .post('/api/create-order', {
-                data: {
-                    items: [
-                        {
-                            price_data: {
-                                currency: 'usd',
-                                product_data: {
-                                    name: 'Stubborn Attachments',
-                                    images: ['https://i.imgur.com/EHyR2nP.png'],
-                                },
-                                unit_amount: 2000,
-                            },
-                            quantity: 1,
-                        },
-                    ],
-                },
+            .post('/api/orders', {
+                orderItems: cart.items,
             })
             .then(({ data }) => {
+                console.log(data)
                 return stripe.redirectToCheckout({ sessionId: data.sessionId })
             })
             .then(res => {

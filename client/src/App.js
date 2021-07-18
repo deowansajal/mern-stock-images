@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound'
 import ImageDetails from './pages/ImageDetails'
 import Checkout from './pages/Checkout'
 import Footer from './components/layout/Footer'
+import Order from './pages/Order'
 
 const App = () => {
     return (
@@ -59,7 +60,8 @@ const App = () => {
                             restricted={false}
                         />
 
-                        <PrivateRoute path="/me" component={Profile} />
+                        <PrivateRoute exact path="/me" component={Profile} />
+                        <PrivateRoute path="/me/orders" component={Order} />
 
                         <AdminRoute path="/admin" component={Admin} />
                         <AdminRoute

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Navbar, Nav, Container } from 'react-bootstrap'
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 
 import { AuthContext } from '../../context/auth-context'
 
@@ -18,9 +18,26 @@ const Header = () => {
 
     if (isAuthenticated && user && user.role !== 'admin') {
         navItems = (
-            <>
-                <NavItem to="me">Profile</NavItem>
-            </>
+            <NavDropdown
+                title={user.name && user.name.toUpperCase()}
+                id="nav-dropdown"
+            >
+                <NavDropdown.Item>
+                    <NavItem to="/me" className="text-dark">
+                        Profile
+                    </NavItem>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                    <NavItem to="/me/orders" className="text-dark">
+                        Orders
+                    </NavItem>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                    <NavItem to="/login" onClick={logout} className="text-dark">
+                        Logout
+                    </NavItem>
+                </NavDropdown.Item>
+            </NavDropdown>
         )
     }
 
@@ -45,11 +62,7 @@ const Header = () => {
                     <Navbar.Collapse>
                         <Nav className="ml-auto">
                             {navItems}
-                            {isAuthenticated && (
-                                <NavItem to="/login" onClick={logout}>
-                                    Logout
-                                </NavItem>
-                            )}
+
                             {user.role !== 'admin' && (
                                 <NavItem to="/cart">
                                     <Icon name="shopping_cart" />

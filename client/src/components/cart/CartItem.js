@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image } from 'react-bootstrap'
 import Icon from '../utils/Icon'
-import { Td } from '../table/table'
+import { Td } from '../table/Table'
 import priceFormatter from '../utils/priceFormatter'
 
 const tdStyle = {
