@@ -1,19 +1,29 @@
 import { useContext } from 'react'
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
+import { Navbar, Nav, Container, NavDropdown, Badge } from 'react-bootstrap'
 
 import { AuthContext } from '../../context/auth-context'
+import { CartContext } from '../../context/cart-context'
 
 import NavItem from '../navItem/NavItem'
 import Icon from '../utils/Icon'
 
 const Header = () => {
     const { isAuthenticated, logout, user } = useContext(AuthContext)
+    const { cart } = useContext(CartContext)
 
     let navItems = (
-        <>
-            <NavItem to="/signup">Signup</NavItem>
-            <NavItem to="/login">Login</NavItem>
-        </>
+        <NavDropdown title="Account" className="mr-4 font-weight-bold">
+            <NavDropdown.Item as="span">
+                <NavItem to="/login" className="text-dark">
+                    Login
+                </NavItem>
+            </NavDropdown.Item>
+            <NavDropdown.Item as="span">
+                <NavItem to="/signup" className="text-dark">
+                    Signup
+                </NavItem>
+            </NavDropdown.Item>
+        </NavDropdown>
     )
 
     if (isAuthenticated && user && user.role !== 'admin') {
@@ -21,18 +31,19 @@ const Header = () => {
             <NavDropdown
                 title={user.name && user.name.toUpperCase()}
                 id="nav-dropdown"
+                className="mr-4 font-weight-bold"
             >
-                <NavDropdown.Item>
+                <NavDropdown.Item as="span">
                     <NavItem to="/me" className="text-dark">
                         Profile
                     </NavItem>
                 </NavDropdown.Item>
-                <NavDropdown.Item>
+                <NavDropdown.Item as="span">
                     <NavItem to="/me/orders" className="text-dark">
                         Orders
                     </NavItem>
                 </NavDropdown.Item>
-                <NavDropdown.Item>
+                <NavDropdown.Item as="span">
                     <NavItem to="/login" onClick={logout} className="text-dark">
                         Logout
                     </NavItem>
@@ -54,10 +65,11 @@ const Header = () => {
             <Container>
                 <Navbar variant="dark" expand="lg">
                     <Nav.Link href="/">
-                        <Navbar.Brand className="text-light p-0">
+                        <Navbar.Brand className="text-light ">
                             Logo
                         </Navbar.Brand>
                     </Nav.Link>
+
                     <Navbar.Toggle />
                     <Navbar.Collapse>
                         <Nav className="ml-auto">
@@ -65,7 +77,19 @@ const Header = () => {
 
                             {user.role !== 'admin' && (
                                 <NavItem to="/cart">
-                                    <Icon name="shopping_cart" />
+                                    <div className="position-relative">
+                                        <Icon name="shopping_cart" />
+                                        <Badge
+                                            variant="primary"
+                                            style={{
+                                                position: 'absolute',
+                                                top: '-7px',
+                                                right: '-5px',
+                                            }}
+                                        >
+                                            {cart.totalCartItems}
+                                        </Badge>
+                                    </div>
                                 </NavItem>
                             )}
                         </Nav>

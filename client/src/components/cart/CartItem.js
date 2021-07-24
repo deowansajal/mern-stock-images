@@ -23,9 +23,12 @@ const CartItem = ({ cartItem, removeFromCart }) => {
                         alt=""
                     />
                 </div>
-                Lorem ipsum dolor sit amet cing elit. Dolor, non.
+                {cartItem.name}
             </Td>
-            <Td style={tdStyle}>{priceFormatter(cartItem.price)}</Td>
+            <Td style={tdStyle}>
+                {priceFormatter(cartItem.price)} x 1 ={' '}
+                {priceFormatter(cartItem.price)}{' '}
+            </Td>
             <Td style={tdStyle}>
                 <Icon
                     onClick={() => removeFromCart(cartItem.id)}

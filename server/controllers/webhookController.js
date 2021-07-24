@@ -2,7 +2,7 @@ const stripe = require('stripe')
 const asyncHandler = require('../middleware/asyncHandler')
 
 const Subscription = require('../models/Subscription')
-const Customer = require('../models/Customer')
+const User = require('../models/User')
 const Order = require('../models/Order')
 
 const setEvent = req => {
@@ -21,37 +21,69 @@ const setEvent = req => {
     return result
 }
 
-const createCustomer = async session => {
-    const customer = await Customer.findOne({
+const createSubscription = async subscriptionObj => {
+    const subscription = await Subscription.findOne({
+        'customer.id': subscriptionObj.customer,
+    })
+
+    if (subscription) {
+        subscription.id = subscriptionObj.id
+        subscription.status = subscription.status
+        subscription.plan.productId = subscriptionObj.plan.product
+        const savedSubscription = await subscription.save()
+    }
+}
+
+const updateSubscriptionStatus = async subscriptionObj => {
+    const subscription = await Subscription.findOne({
+        'customer.id': subscriptionObj.customer,
+    })
+
+    if (subscription) {
+        subscription.status = subscriptionObj.status
+        const savedSubscription = await subscription.save()
+    }
+}
+
+const setInvoice = async invoiceObj => {
+    const subscription = await Subscription.findOne({
+        'customer.id': invoiceObj.customer,
+    })
+
+    if (subscription) {
+        subscription.invoice.paid = invoiceObj.paid
+        subscription.invoice.status = invoiceObj.status
+        const savedSubscription = await subscription.save()
+    }
+}
+
+const subscriptionSessionComplete = async session => {
+    const subscription = await Subscription.findOne({
         sessionId: session.id,
     })
 
-    customer.id = session.customer
-    customer.paymentStatus = session.payment_status
-    customer.email = session.details.email
-    const savedCustomer = await customer.save()
-    // console.log(savedCustomer)
-    return savedCustomer
+    if (subscription) {
+        subscription.customer.id = session.customer
+        subscription.payment.status = session.payment_status
+        const savedSubscription = await subscription.save()
+    }
 }
 
-// const createSubscription = async subscriptionObject => {
-//     console.log(subscriptionObject)
-//     console.log('subscriptionObject')
-//     const subscription = await Subscription.findOne({
-//         subscription: subscriptionObject.id,
-//     })
-//     subscription.subscription = subscriptionObject.subscription
-//     subscription.status = subscriptionObject.status
-//     subscription.customer = subscriptionObject.customer
-
-//     return await subscription.save()
-// }
+const paymentSessionComplete = async session => {
+    const order = await Order.findOne({ sessionId: session.id })
+    if (!order) {
+        return res.status(404).send(`Order Not Found`)
+    }
+    order.paymentResult.status = session.payment_status
+    order.isPaid = true
+    const savedOrder = await order.save()
+}
 
 const webhookController = asyncHandler(async (req, res) => {
     const { event, error: eventError } = setEvent(req)
 
     if (eventError) {
-        return res.status(400).send(`Webhook Error: ${err.message}`)
+        return res.status(400).send(`Webhook Error: ${eventError.message}`)
     }
 
     const { type, data } = event
@@ -61,34 +93,38 @@ const webhookController = asyncHandler(async (req, res) => {
             const session = data.object
 
             const order = await Order.findOne({ sessionId: session.id })
+            order.payment.status = session.payment_status
+            order.customer.id = session.customer
+            order.customer.email = session.customer_email
+            const savedOrder = await order.save()
+            console.log(savedOrder)
 
-            if (order && session.payment_status === 'paid') {
-                order.paymentResult.status = session.payment_status
-                order.isPaid = true
-                const savedOrder = await order.save()
-            }
-
+            const user = await User.findById(order.user)
+            user.customer = session.customer
+            user.images.push(order._id)
+            const savedUser = await user.save()
+            console.log(savedUser)
             break
 
         // case 'customer.subscription.created':
-        //     const subscription = await createSubscription(data.object)
-        //     break
-        // case 'customer.subscription.succeed':
-        //     const succeedSubscription = await Subscription.findOne({
-        //         subscription: data.object.subscription,
-        //     })
-
-        //     succeedSubscription.status = data.object.status
-        //     const savedSucceedSubscription = await succeedSubscription.save()
-        //     console.log(savedSucceedSubscription)
+        //     await createSubscription(data.object)
         //     break
 
-        // case 'payment_intent.succeeded':
-        case 'payment_intent.created':
-            break
+        // case 'invoice.paid':
+
+        //     await setInvoice(data.object)
+        //     break
+        // case 'customer.subscription.updated':
+        //     await updateSubscriptionStatus(data.object)
+        //     break
+
+        // case 'invoice.payment_failed':
+        //     console.log(data.object)
+        //     break
 
         default:
-            console.log(`unHandle event type ${type}`)
+            console.log(`unHandle event type ${type} =`)
+        // console.log(data.object)
     }
 
     // Return a res to acknowledge receipt of the event

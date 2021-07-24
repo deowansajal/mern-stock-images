@@ -14,7 +14,6 @@ import Customers from './pages/Customers'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
 import ImageDetails from './pages/ImageDetails'
-import Checkout from './pages/Checkout'
 import Footer from './components/layout/Footer'
 import Order from './pages/Order'
 

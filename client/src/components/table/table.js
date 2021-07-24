@@ -12,14 +12,18 @@ export const Th = ({ className, children, ...props }) => {
         </th>
     )
 }
-export const Td = ({ className, children, ...props }) => {
+export const Td = ({ className, style = {}, children, ...props }) => {
     const classes = classNames({
         [className]: classNames,
         'border-bottom-0': true,
     })
 
+    const styles = {
+        verticalAlign: 'middle',
+        ...style,
+    }
     return (
-        <td {...props} className={classes}>
+        <td {...props} className={classes} style={{ ...styles }}>
             {children ? children : null}
         </td>
     )

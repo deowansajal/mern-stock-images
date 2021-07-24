@@ -5,6 +5,7 @@ const cors = require('cors')
 const connectDB = require('./config/db')
 const routes = require('./routes/routes')
 const stripe = require('stripe')
+const morgan = require('morgan')
 
 const logMessage = require('./utils/logMessage')
 const webhookController = require('./controllers/webhookController')
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
+app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 const PORT = process.env.PORT || 4000

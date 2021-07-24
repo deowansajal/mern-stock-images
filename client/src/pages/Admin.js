@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react'
-import { Route } from 'react-router-dom'
 import { Container, Button } from 'react-bootstrap'
 import Images from '../components/images/Images'
 import ImageUpload from '../components/images/ImageUpload'

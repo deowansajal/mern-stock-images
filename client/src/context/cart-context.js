@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useCallback } from 'react'
+import React, { useReducer, useCallback } from 'react'
 
 import {
     ADD_TO_CART,
@@ -10,7 +10,7 @@ const initialCart = {
     items: [],
     cartSubtotal: 0,
     cartTotal: 0,
-    totalNumberOfItemsInCart: 0,
+    totalCartItems: 0,
 }
 
 const sumCartSubtotal = items => {
@@ -24,6 +24,7 @@ export const CartContext = React.createContext({
     cart: { ...initialCart },
     addToCart: cartItem => {},
     removeFromCart: id => {},
+    resetCart: () => {},
 })
 
 const addCartItem = (state, action) => {
@@ -71,14 +72,14 @@ const cartReducer = (state, action) => {
             return newCart
 
         case REMOVE_FROM_CART:
-            console.log('click remove cart')
             newCart = removeCartItem(state, action)
             localStorage.setItem('cart', JSON.stringify(newCart))
             return newCart
 
         case RESET_CART:
+            localStorage.setItem('cart', JSON.stringify(initialCart))
             return {
-                ...state,
+                ...initialCart,
             }
         default:
             return state
@@ -99,7 +100,7 @@ const CartProvider = ({ children }) => {
 
     const addToCart = cartItem => dispatch({ type: ADD_TO_CART, cartItem })
     const removeFromCart = id => dispatch({ type: REMOVE_FROM_CART, id })
-    const resetCart = () => dispatch({ type: RESET_CART })
+    const resetCart = useCallback(() => dispatch({ type: RESET_CART }), [])
 
     const value = {
         addToCart,

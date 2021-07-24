@@ -9,6 +9,7 @@ import { AuthContext } from '../context/auth-context'
 import AuthModal from '../components/modal/AuthModal'
 
 import useHttp from '../hooks/useHttp'
+
 import axios from 'axios'
 import CartItem from '../components/cart/CartItem'
 import { THeader } from '../components/table/Table'

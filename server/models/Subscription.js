@@ -3,17 +3,31 @@ const commonSchema = require('../utils/commonSchema')
 
 const Subscription = new mongoose.Schema({
     sessionId: { ...commonSchema() },
-    subscription: String,
-    status: String,
     userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-    customer: String,
-    customerName: String,
-    customerEmail: String,
-    invoicePdf: String,
-    isPaid: { type: Boolean, default: false },
-    paymentStatus: String,
-    paymentMethod: { type: String, required: true, enum: ['card'] },
-    currentPeriodStart: { type: Number, required: true, default: 0 },
+    id: String,
+    status: { type: String, required: true, default: 'incomplete' },
+
+    // payment: {
+    //     status: { type: String, required: true, default: 'unpaid' },
+    //     method: String,
+    // },
+
+    // plan: {
+    //     productId: String,
+    //     priceId: { type: String, required: true },
+    // },
+
+    // customer: {
+    //     id: String,
+    //     name: String,
+    //     email: String,
+    // },
+
+    invoice: {
+        pdf: String,
+        paid: { type: Boolean, default: false },
+        status: { type: String, default: 'draft' },
+    },
 })
 
 module.exports = mongoose.model('Subscription', Subscription)

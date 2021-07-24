@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Modal from 'react-modal'
-import { Button } from 'react-bootstrap'
 import styles from './AuthModal.module.css'
 
 import Login from '../../pages/Login'
@@ -39,7 +38,7 @@ const AuthModal = ({
     }
     const getLoginSuccessConfirmation = isSuccess => {
         setIsOpen(false)
-        history.push('/cart/checkout')
+        history.push('/cart')
     }
 
     return (

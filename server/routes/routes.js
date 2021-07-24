@@ -2,6 +2,7 @@ const authRoute = require('./authRoute')
 const adminRoute = require('./adminRoute')
 const imageRoute = require('./imageRoute')
 const orderRoute = require('./orderRoute')
+const subscriptionRoute = require('./subscriptionRoute')
 
 const routesArray = [
     {
@@ -22,6 +23,11 @@ const routesArray = [
     {
         path: '/api/orders',
         route: orderRoute,
+    },
+
+    {
+        path: '/api/subscription',
+        route: subscriptionRoute,
     },
 ]
 

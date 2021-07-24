@@ -24,15 +24,17 @@ const UserSchema = new mongoose.Schema({
         select: false,
     },
 
-    subscription: {
-        subscribed: { type: Boolean, default: false },
-        id: String,
-        status: String,
-        invoicePdf: String,
-        isPaid: { type: Boolean, default: false },
-        currentPeriodStart: { type: Number, required: true, default: 0 },
-    },
+    customer: String,
 
+    images: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Order',
+        },
+    ],
+
+    customer: String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     confirmEmailToken: String,

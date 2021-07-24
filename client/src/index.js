@@ -22,7 +22,7 @@ ReactDOM.render(
         <AuthProvider>
             <ImagesProvider>
                 <CartProvider>
-                    <App />,
+                    <App />
                 </CartProvider>
             </ImagesProvider>
         </AuthProvider>
