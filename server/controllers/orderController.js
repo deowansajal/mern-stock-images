@@ -15,7 +15,6 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
     const { orderItems } = req.body
     const { email, _id, customer } = req.user
 
-    console.log('customer', customer)
     const session = await createSession({
         customer,
         lineItems: orderItems.map(item => ({
@@ -48,6 +47,10 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
 
 exports.getAllOrdersByIdController = asyncHandler(async (req, res, next) => {
     const orders = await Order.find({ user: req.user._id })
+        .populate({
+            path: 'subscription',
+        })
+        .sort('-createdAt')
 
     return sendSuccessResponse({
         res,
@@ -61,6 +64,8 @@ exports.getAllOrdersByIdController = asyncHandler(async (req, res, next) => {
 exports.getOrderCheckoutSessionController = asyncHandler(
     async (req, res, next) => {
         const { sessionId } = req.params
+
+        console.log(sessionId)
 
         const session = await getSessionById(sessionId)
         const { id, name, email } = await getCustomerById(session.customer)

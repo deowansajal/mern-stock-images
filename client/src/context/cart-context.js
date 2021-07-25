@@ -15,7 +15,6 @@ const initialCart = {
 
 const sumCartSubtotal = items => {
     return items.reduce((acc, item) => {
-        console.log(item)
         return acc + (item.price || 0)
     }, 0)
 }
@@ -98,7 +97,9 @@ const CartProvider = ({ children }) => {
     const cart = localStorage.getItem('cart')
     const [state, dispatch] = useReducer(cartReducer, parsedCart(cart))
 
-    const addToCart = cartItem => dispatch({ type: ADD_TO_CART, cartItem })
+    const addToCart = cartItem => {
+        dispatch({ type: ADD_TO_CART, cartItem })
+    }
     const removeFromCart = id => dispatch({ type: REMOVE_FROM_CART, id })
     const resetCart = useCallback(() => dispatch({ type: RESET_CART }), [])
 

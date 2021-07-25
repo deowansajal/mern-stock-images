@@ -26,14 +26,16 @@ const RoundedIconWrapper = ({ className, style, children }) => {
     )
 }
 
-const SingleImage = ({ id, thumbnail, name, price, setCurrentImage }) => {
+const SingleImage = ({ image, setCurrentImage }) => {
     const [imageContentIsShown, setImageContentIsShown] = useState(false)
+
+    const { _id: id, name, thumbnail, price, description } = image
 
     const mouseEnterHandler = e => setImageContentIsShown(true)
     const mouseLeaveHandler = e => setImageContentIsShown(false)
 
     const clickHandler = () => {
-        const currentImage = { id, name, price, thumbnail }
+        const currentImage = { id, name, thumbnail, price, description }
         setCurrentImage(currentImage)
         localStorage.setItem('currentImage', JSON.stringify(currentImage))
     }

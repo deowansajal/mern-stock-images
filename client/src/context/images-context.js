@@ -34,7 +34,7 @@ const ImagesProvider = ({ children }) => {
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const [currentImageId, setCurrentImageId] = useState(false)
+    const [currentImageId, setCurrentImageId] = useState('')
     const [currentImage, setCurrentImage] = useState(getCurrentImage())
 
     const sendHttpRequest = useHttp()

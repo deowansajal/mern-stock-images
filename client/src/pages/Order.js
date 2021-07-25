@@ -11,35 +11,47 @@ import useSubscription from '../hooks/useSubscription'
 import useOrder from '../hooks/useOrder'
 
 const OrderItem = ({ order, recurringProducts, subscribeHandler }) => {
+    let subscriptionContent
+
+    if (order.mode === 'payment' && order.payment.status === 'paid') {
+        subscriptionContent = recurringProducts.map(product => (
+            <OverlayTrigger
+                key={product.productId}
+                trigger={['hover', 'focus']}
+                placement="top"
+                overlay={<SubscriptionPopover product={product} />}
+            >
+                <Button
+                    variant="secondary"
+                    className="mx-2 mb-2 mb-lg-0"
+                    onClick={subscribeHandler.bind(null, {
+                        priceId: product.price.id,
+                        orderId: order._id,
+                    })}
+                >
+                    {product.name}
+                </Button>
+            </OverlayTrigger>
+        ))
+    }
+
+    if (order.mode === 'subscription') {
+        subscriptionContent = (
+            <p className="text-success" disabled>
+                {order.subscription && order.subscription.status}
+            </p>
+        )
+    }
+
     return (
         <tr>
             <Td>{order._id}</Td>
             <Td>{timeFormatter(order.createdAt)}</Td>
             <Td>{priceFormatter(order.totalPrice)}</Td>
             <Td>{order.payment.status}</Td>
+            <Td>{subscriptionContent}</Td>
             <Td>
                 <Button variant="outline-secondary">Details</Button>
-            </Td>
-            <Td>
-                {recurringProducts.map(product => (
-                    <OverlayTrigger
-                        key={product.productId}
-                        trigger={['hover', 'focus']}
-                        placement="top"
-                        overlay={<SubscriptionPopover product={product} />}
-                    >
-                        <Button
-                            variant="secondary"
-                            className="mx-2 mb-2 mb-lg-0"
-                            onClick={subscribeHandler.bind(
-                                null,
-                                product.price.id
-                            )}
-                        >
-                            {product.name}
-                        </Button>
-                    </OverlayTrigger>
-                ))}
             </Td>
         </tr>
     )
@@ -48,7 +60,7 @@ const OrderItem = ({ order, recurringProducts, subscribeHandler }) => {
 const Order = () => {
     const { orders } = useOrder()
     const { recurringProducts, subscribeHandler } = useSubscription()
-
+    // console.log('orders =', orders)
     return (
         <ContainerWrapper>
             <Container fluid="md">
@@ -65,12 +77,12 @@ const Order = () => {
                                     'Date',
                                     'Total',
                                     'Status',
-                                    '',
                                     'Subscription',
+                                    '',
                                 ]}
                             />
                             <tbody>
-                                {orders.reverse().map(order => (
+                                {orders.map(order => (
                                     <OrderItem
                                         key={order._id}
                                         order={order}

@@ -5,6 +5,42 @@ import { Image, Container, Row, Col, Button } from 'react-bootstrap'
 import { ImagesContext } from '../context/images-context'
 import { CartContext } from '../context/cart-context'
 import priceFormatter from '../components/utils/priceFormatter'
+import GoToShopButton from '../components/buttons/GoToShopButton'
+
+const Buttons = ({ hasInCart, currentImage, addToCart }) => {
+    let buttons = (
+        <>
+            <Button
+                onClick={e => addToCart(currentImage)}
+                variant="outline-primary"
+                className="w-100 mb-4 "
+            >
+                Add to Cart
+            </Button>
+
+            <GoToShopButton variant="secondary" className="w-100">
+                Back to Shop
+            </GoToShopButton>
+        </>
+    )
+
+    if (hasInCart) {
+        buttons = (
+            <>
+                <Link to="/cart">
+                    <Button variant="outline-primary" className="w-100 mb-4 ">
+                        Go to Cart
+                    </Button>
+                </Link>
+                <GoToShopButton variant="secondary" className="w-100">
+                    Continue Shopping
+                </GoToShopButton>
+            </>
+        )
+    }
+
+    return buttons
+}
 
 const ImageDetails = () => {
     const { currentImage } = useContext(ImagesContext)
@@ -28,49 +64,28 @@ const ImageDetails = () => {
                     sm={12}
                     md={12}
                     lg={{ span: 5, offset: 0 }}
-                    className=" my-lg-5 my-0 "
+                    className="my-lg-5 my-0 "
                     style={{ maxHeight: 400 }}
                 >
                     <div className="d-flex h-100 ">
-                        <div className="m-auto">
-                            <div className="px-4 border ml-4">
+                        <div className="w-100">
+                            <div className="px-4 border ">
                                 <div className="mt-5  mt-sm-0 py-sm-4 ">
                                     <p className="text-uppercase">
                                         {currentImage.name}
                                     </p>
-                                    <h4>
-                                        {priceFormatter(currentImage.price)}
-                                    </h4>
-                                    <p className="lead">{currentImage.name}</p>
-                                    <div className="mt-5">
-                                        {!hasInCart && (
-                                            <Button
-                                                onClick={e =>
-                                                    addToCart(currentImage)
-                                                }
-                                                variant="outline-primary"
-                                                className="w-100 mb-4 "
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        )}
+                                    <p>{currentImage.description}</p>
 
-                                        {hasInCart && (
-                                            <Link to="/cart">
-                                                <Button
-                                                    variant="outline-primary"
-                                                    className="w-100 mb-4 "
-                                                >
-                                                    Go to Cart
-                                                </Button>
-                                            </Link>
-                                        )}
-                                        <Button
-                                            className="w-100 "
-                                            variant="danger"
-                                        >
-                                            Download
-                                        </Button>
+                                    <h3>
+                                        {priceFormatter(currentImage.price)}
+                                    </h3>
+
+                                    <div className="mt-5">
+                                        <Buttons
+                                            hasInCart={hasInCart}
+                                            addToCart={addToCart}
+                                            currentImage={currentImage}
+                                        />
                                     </div>
                                 </div>
                             </div>

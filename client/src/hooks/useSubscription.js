@@ -7,13 +7,14 @@ import isNotEqual from '../components/utils/isNotEqual'
 const useSubscription = () => {
     const [recurringProducts, setRecurringProducts] = useState([])
     const stripe = useStripe()
-    const subscribeHandler = async priceId => {
+    const subscribeHandler = async ({ priceId, orderId }) => {
         try {
             const { data } = await axios.post(
                 `/api/subscription?mode=subscription`,
                 {
                     data: {
                         priceId,
+                        orderId,
                     },
                 }
             )

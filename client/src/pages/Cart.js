@@ -8,13 +8,12 @@ import ContainerWrapper from '../components/utils/ContainerWrapper'
 import { AuthContext } from '../context/auth-context'
 import AuthModal from '../components/modal/AuthModal'
 
-import useHttp from '../hooks/useHttp'
-
 import axios from 'axios'
 import CartItem from '../components/cart/CartItem'
 import { THeader } from '../components/table/Table'
-import { Link } from 'react-router-dom'
 import priceFormatter from '../components/utils/priceFormatter'
+
+import GoToShopButton from '../components/buttons/GoToShopButton'
 
 const CartCheckoutButton = ({
     isAuthenticated,
@@ -77,9 +76,7 @@ const Cart = () => {
     let cartJsx = (
         <div className="text-center">
             <p className="lead mb-5">There is no item in cart</p>
-            <Link to="/">
-                <Button>Go to Shop</Button>
-            </Link>
+            <GoToShopButton>Go To Shop</GoToShopButton>
         </div>
     )
 

@@ -5,58 +5,69 @@ import isNotEqual from '../components/utils/isNotEqual'
 import convertQueryStringToObject from '../components/utils/convertQueryStringToObject'
 import { CartContext } from '../context/cart-context'
 
-const useOrder = () => {
+const useOrderLoad = () => {
     const [orders, setOrders] = useState([])
     const [errorMessage, setErrorMessage] = useState('')
-    const [paymentStatus, setPaymentStatus] = useState('unpaid')
-    const location = useLocation()
 
-    const { resetCart } = useContext(CartContext)
+    useEffect(() => {
+        const cancelTokenSource = axios.CancelToken.source()
+        axios
+            .get('/api/orders', {
+                cancelToken: cancelTokenSource.token,
+            })
+            .then(({ data }) => {
+                setOrders([...data.data.orders])
+            })
+            .catch(err => {
+                setErrorMessage(err.response.data.message)
+            })
+
+        return cancelTokenSource.cancel
+    }, [])
+
+    return { orders, ordersErrorMessage: errorMessage }
+}
+
+const useOrderCheckoutSession = () => {
+    const [paymentStatus, setPaymentStatus] = useState([])
+    const [errorMessage, setErrorMessage] = useState('')
+    const location = useLocation()
 
     const { sessionId } = convertQueryStringToObject(location.search)
 
-    const loadOrders = useCallback(async () => {
-        try {
-            const { data } = await axios.get('/api/orders')
-
-            if (orders.length === 0) {
-                setOrders(data.data.orders)
-            }
-        } catch (err) {
-            setErrorMessage(err.response.data.message)
-        }
-    }, [orders.length])
-
-    const getOrderCheckoutSession = useCallback(async () => {
-        try {
-            const { data } = await axios.get(
-                `/api/orders/checkout-session/${sessionId}`
-            )
-
-            setPaymentStatus(data.data.paymentStatus)
-        } catch (err) {
-            const { message } = err.response
-            console.log(message)
-            setErrorMessage(message)
-        }
-    }, [sessionId])
-
     useEffect(() => {
-        loadOrders()
+        const cancelTokenSource = axios.CancelToken.source()
 
         if (sessionId) {
-            getOrderCheckoutSession()
+            axios
+                .get(`/api/orders/checkout-session/${sessionId}`, {
+                    cancelToken: cancelTokenSource.token,
+                })
+                .then(({ data }) => {
+                    setPaymentStatus(data.data.paymentStatus)
+                })
+                .catch(err => {
+                    setErrorMessage(err.response.data.message)
+                })
         }
+
+        return cancelTokenSource.cancel
+    }, [sessionId])
+
+    return { paymentStatus, checkoutSessionErrorMessage: errorMessage }
+}
+
+const useOrder = () => {
+    const { orders } = useOrderLoad()
+    const { paymentStatus } = useOrderCheckoutSession()
+
+    const { resetCart } = useContext(CartContext)
+
+    useEffect(() => {
         if (paymentStatus === 'paid') {
             resetCart()
         }
-    }, [
-        loadOrders,
-        getOrderCheckoutSession,
-        sessionId,
-        paymentStatus,
-        resetCart,
-    ])
+    }, [paymentStatus, resetCart])
     return { orders }
 }
 
