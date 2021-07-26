@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
-import isNotEqual from '../components/utils/isNotEqual'
 import convertQueryStringToObject from '../components/utils/convertQueryStringToObject'
 import { CartContext } from '../context/cart-context'
 
@@ -19,6 +18,7 @@ const useOrderLoad = () => {
                 setOrders([...data.data.orders])
             })
             .catch(err => {
+                console.log(err.message)
                 setErrorMessage(err.response.data.message)
             })
 
@@ -60,7 +60,6 @@ const useOrderCheckoutSession = () => {
 const useOrder = () => {
     const { orders } = useOrderLoad()
     const { paymentStatus } = useOrderCheckoutSession()
-
     const { resetCart } = useContext(CartContext)
 
     useEffect(() => {

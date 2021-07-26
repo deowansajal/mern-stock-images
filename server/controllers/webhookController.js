@@ -81,12 +81,17 @@ const customerSubscriptionUpdate = async subscriptionObj => {
         id: subscriptionObj.id,
     })
 
+    console.log('customerSubscriptionUpdate =', subscription)
+
     if (!subscription) {
         return
     }
 
     subscription.status = subscriptionObj.status
-    subscription.plan.priceId = subscriptionObj.plan.id
+    if (subscription.plan) {
+        subscription.plan.priceId = subscriptionObj.plan.id
+        subscription.plan.productId = subscriptionObj.plan.product
+    }
     const savedSubscription = await subscription.save()
 }
 
@@ -118,10 +123,13 @@ const webhookController = asyncHandler(async (req, res) => {
             break
 
         case 'customer.subscription.updated':
+        case 'customer.subscription.deleted':
             await customerSubscriptionUpdate(data.object)
-
             break
 
+        case 'customer.subscription.created':
+            console.log(data.object)
+            break
         // case 'invoice.payment_failed':
         //     console.log(data.object)
         //     break

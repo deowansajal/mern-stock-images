@@ -7,6 +7,9 @@ const ErrorResponse = require('../utils/errorResponse')
 const stripe = require('../config/stripe')
 const Subscription = require('../models/Subscription')
 
+// @desc      Pricing
+// @route     POST /api/subscription/pricing
+// @access    Private
 exports.getAllPricesListController = asyncHandler(async (req, res, next) => {
     const recurringProducts = await stripe.getRecurringProducts()
 
@@ -20,6 +23,9 @@ exports.getAllPricesListController = asyncHandler(async (req, res, next) => {
     })
 })
 
+// @desc      Subscribe
+// @route     POST /api/subscription
+// @access    Private
 exports.subscribeController = asyncHandler(async (req, res, next) => {
     const { mode } = req.query
     const { priceId, orderId } = req.body.data
@@ -57,6 +63,52 @@ exports.subscribeController = asyncHandler(async (req, res, next) => {
         message: 'Prices list retrieved successfully',
         data: {
             sessionId: session.id,
+        },
+    })
+})
+
+// @desc      Manage subscription billing
+// @route     POST /api/subscription/manage-billing
+// @access    Private
+exports.manageBillingController = asyncHandler(async (req, res, next) => {
+    console.log('manage billing ...')
+    const { customer, _id } = req.user
+
+    const { subscriptionId } = req.body.data
+
+    console.log(subscriptionId)
+    const hasSubscription = await Subscription.findOne({ id: subscriptionId })
+
+    if (!customer || !hasSubscription) {
+        return new ErrorResponse({
+            statusCode: 403,
+            message: 'Forbidden!',
+        })
+    }
+
+    const session = await stripe.createCustomerPortalSession(customer)
+
+    // res.redirect(303, session.url)
+
+    console.log('portal session = ', session)
+    // const subscription = await Subscription.create({
+    //     sessionId: session.id,
+    //     order: orderId,
+    //     user: _id,
+    //     plan: {
+    //         priceId,
+    //     },
+    // })
+
+    // console.log('subscription = ', subscription)
+
+    // res.redirect(se)
+
+    sendSuccessResponse({
+        res,
+        message: 'Prices list retrieved successfully',
+        data: {
+            url: session.url,
         },
     })
 })

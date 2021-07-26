@@ -23,6 +23,7 @@ const Subscription = new mongoose.Schema({
     },
 
     plan: {
+        name: String,
         productId: String,
         priceId: { type: String, required: true },
     },

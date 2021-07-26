@@ -1,57 +1,28 @@
 import React from 'react'
 
-import { Container, Table, Button, OverlayTrigger } from 'react-bootstrap'
+import { Container, Table, Button } from 'react-bootstrap'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
 import { Td, THeader } from '../components/table/Table'
 import priceFormatter from '../components/utils/priceFormatter'
 import timeFormatter from '../components/utils/timeFormatter'
 
-import SubscriptionPopover from '../components/subscription/SubscriptionPopover'
-import useSubscription from '../hooks/useSubscription'
 import useOrder from '../hooks/useOrder'
+import Subscription from '../components/subscription/Subscription'
 
-const OrderItem = ({ order, recurringProducts, subscribeHandler }) => {
-    let subscriptionContent
-
-    if (order.mode === 'payment' && order.payment.status === 'paid') {
-        subscriptionContent = recurringProducts.map(product => (
-            <OverlayTrigger
-                key={product.productId}
-                trigger={['hover', 'focus']}
-                placement="top"
-                overlay={<SubscriptionPopover product={product} />}
-            >
-                <Button
-                    variant="secondary"
-                    className="mx-2 mb-2 mb-lg-0"
-                    onClick={subscribeHandler.bind(null, {
-                        priceId: product.price.id,
-                        orderId: order._id,
-                    })}
-                >
-                    {product.name}
-                </Button>
-            </OverlayTrigger>
-        ))
-    }
-
-    if (order.mode === 'subscription') {
-        subscriptionContent = (
-            <p className="text-success" disabled>
-                {order.subscription && order.subscription.status}
-            </p>
-        )
-    }
-
+const OrderItem = ({ order }) => {
     return (
         <tr>
             <Td>{order._id}</Td>
             <Td>{timeFormatter(order.createdAt)}</Td>
             <Td>{priceFormatter(order.totalPrice)}</Td>
             <Td>{order.payment.status}</Td>
-            <Td>{subscriptionContent}</Td>
             <Td>
-                <Button variant="outline-secondary">Details</Button>
+                <Subscription order={order} />
+            </Td>
+            <Td>
+                <Button size="sm" variant="outline-secondary">
+                    Details
+                </Button>
             </Td>
         </tr>
     )
@@ -59,12 +30,10 @@ const OrderItem = ({ order, recurringProducts, subscribeHandler }) => {
 
 const Order = () => {
     const { orders } = useOrder()
-    const { recurringProducts, subscribeHandler } = useSubscription()
-    // console.log('orders =', orders)
     return (
         <ContainerWrapper>
             <Container fluid="md">
-                {orders.length <= 0 && (
+                {orders.length === 0 && (
                     <p className="lead text-center">You have no Order</p>
                 )}
                 {orders.length > 0 && (
@@ -83,12 +52,7 @@ const Order = () => {
                             />
                             <tbody>
                                 {orders.map(order => (
-                                    <OrderItem
-                                        key={order._id}
-                                        order={order}
-                                        subscribeHandler={subscribeHandler}
-                                        recurringProducts={recurringProducts}
-                                    />
+                                    <OrderItem key={order._id} order={order} />
                                 ))}
                             </tbody>
                         </Table>

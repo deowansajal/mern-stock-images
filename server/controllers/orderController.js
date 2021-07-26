@@ -5,6 +5,8 @@ const {
     createSession,
     getSessionById,
     getCustomerById,
+    getPriceById,
+    getProductById,
 } = require('../config/stripe')
 
 const asyncHandler = require('../middleware/asyncHandler')
@@ -52,13 +54,30 @@ exports.getAllOrdersByIdController = asyncHandler(async (req, res, next) => {
         })
         .sort('-createdAt')
 
-    return sendSuccessResponse({
-        res,
-        message: 'All Order request successful',
-        data: {
-            orders,
-        },
+    const newOrders = orders
+        .map(order => order.toObject())
+        .map(async order => {
+            if (!order.subscription) {
+                return order
+            }
+            let product = await getProductById(
+                order.subscription.plan.productId
+            )
+            order.subscription.plan.name = product
+            return order
+        })
+
+    Promise.all(newOrders).then(data => {
+        return sendSuccessResponse({
+            res,
+            message: 'All Order request successful',
+            data: {
+                orders: data,
+            },
+        })
     })
+
+    // console.log('prices = ', prices)
 })
 
 exports.getOrderCheckoutSessionController = asyncHandler(

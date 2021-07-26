@@ -24,8 +24,30 @@ exports.protect = asyncHandler(async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = await User.findById(decoded.id).populate({
             path: 'images',
-            select: 'orderItems mode -_id',
+            select: 'orderItems subscription mode payment -_id',
+            populate: {
+                path: 'subscription',
+                select: 'status',
+                match: {
+                    status: 'active',
+                },
+            },
         })
+
+        req.user.images = req.user.images.filter(image => {
+            if (image.mode === 'subscription' && image.subscription) {
+                return image
+            }
+            if (image.mode === 'payment' && image.payment.status === 'paid') {
+                image.orderItems = image.orderItems.filter(item => {
+                    if (item.isUpdated) {
+                        return item
+                    }
+                })
+                return image
+            }
+        })
+
         next()
     } catch (err) {
         throw new ErrorResponse({
