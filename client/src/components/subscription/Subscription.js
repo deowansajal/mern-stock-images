@@ -35,20 +35,24 @@ const Subscription = ({ order }) => {
 
     if (order.subscription) {
         return (
-            <div>
-                <p variant="outline-info" className="mr-4 my-2">
-                    Plan:{' '}
-                    <span className=" font-weight-bold">
-                        {order.subscription.plan.name}
-                    </span>
-                </p>
+            <>
+                <Button
+                    variant="outline-success"
+                    size="sm"
+                    className="mr-4"
+                    disabled
+                >
+                    {order.subscription.status}
+                </Button>
 
-                <p variant="outline-info" className="mr-4 my-2">
-                    Status:{' '}
-                    <span className=" font-weight-bold">
-                        {order.subscription.status}
-                    </span>
-                </p>
+                <Button
+                    variant="outline-info"
+                    size="sm"
+                    className="mr-4 my-2"
+                    disabled
+                >
+                    {order.subscription.plan.name}
+                </Button>
 
                 <Button
                     onClick={manageSubscriptionBillingHandler.bind(null, {
@@ -58,7 +62,7 @@ const Subscription = ({ order }) => {
                 >
                     Manage Billing
                 </Button>
-            </div>
+            </>
         )
     }
 

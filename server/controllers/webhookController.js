@@ -34,8 +34,10 @@ const createOrder = async session => {
     const savedOrder = await order.save()
 
     const user = await User.findById(order.user)
+    console.log('user = ', user)
     user.customer = session.customer
     user.images.push(order._id)
+    console.log('user after order push = ', user)
     const savedUser = await user.save()
 }
 

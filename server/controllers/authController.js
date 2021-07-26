@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Image = require('../models/Image')
 const asyncHandler = require('../middleware/asyncHandler')
 const getValidationResult = require('../utils/getValidationResult')
 const sendEmail = require('../utils/sendEmail')
@@ -6,6 +7,8 @@ const createToken = require('../utils/createToken')
 const emailConfirmationTemplate = require('../utils/emailConfirmationTemplate')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
 const ErrorResponse = require('../utils/errorResponse')
+
+const getAuthorizedImages = require('../utils/getAuthorizedImages')
 
 // Helper only for development
 // @desc      Delete all users
@@ -168,8 +171,16 @@ exports.getMe = asyncHandler(async (req, res, next) => {
     // user is already available in req due to the protect middleware
     const user = req.user
 
+    const authorizedImages = await getAuthorizedImages(req)
+
+    const images = await Image.find({
+        _id: {
+            $in: authorizedImages,
+        },
+    }).select('-mainImage -path')
+
     sendSuccessResponse({
         res,
-        data: user,
+        data: { user, images },
     })
 })

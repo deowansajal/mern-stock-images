@@ -23,6 +23,7 @@ const AuthProvider = ({ children }) => {
     const hasToken = token && token !== 'undefined' && token !== null
     const [isAuthenticated, setIsAuthenticated] = useState(hasToken)
     const [user, setUser] = useState({})
+    const [authorizedImages, setAuthorizedImages] = useState([])
     const [error, setError] = useState({})
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
@@ -55,7 +56,8 @@ const AuthProvider = ({ children }) => {
             url: '/api/auth/me',
         })
             .then(({ data }) => {
-                setUser(data.data)
+                setUser(data.data.user)
+                setAuthorizedImages(data.data.images)
             })
             .catch(err => {
                 const { error, message } = err.response.data
@@ -71,6 +73,7 @@ const AuthProvider = ({ children }) => {
         isAuthenticated,
         setIsAuthenticated,
         user,
+        authorizedImages,
         setUser,
         error,
         setError,

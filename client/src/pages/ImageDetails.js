@@ -6,26 +6,29 @@ import { ImagesContext } from '../context/images-context'
 import { CartContext } from '../context/cart-context'
 import priceFormatter from '../components/utils/priceFormatter'
 import GoToShopButton from '../components/buttons/GoToShopButton'
+import { AuthContext } from '../context/auth-context'
 
 const Buttons = ({ hasInCart, currentImage, addToCart }) => {
-    let buttons = (
-        <>
-            <Button
-                onClick={e => addToCart(currentImage)}
-                variant="outline-primary"
-                className="w-100 mb-4 "
-            >
-                Add to Cart
-            </Button>
+    if (!hasInCart) {
+        return (
+            <>
+                <Button
+                    onClick={e => addToCart(currentImage)}
+                    variant="outline-primary"
+                    className="w-100 mb-4 "
+                >
+                    Add to Cart
+                </Button>
 
-            <GoToShopButton variant="secondary" className="w-100">
-                Back to Shop
-            </GoToShopButton>
-        </>
-    )
+                <GoToShopButton variant="secondary" className="w-100">
+                    Back to Shop
+                </GoToShopButton>
+            </>
+        )
+    }
 
     if (hasInCart) {
-        buttons = (
+        return (
             <>
                 <Link to="/cart">
                     <Button variant="outline-primary" className="w-100 mb-4 ">
@@ -38,16 +41,19 @@ const Buttons = ({ hasInCart, currentImage, addToCart }) => {
             </>
         )
     }
-
-    return buttons
 }
 
 const ImageDetails = () => {
     const { currentImage } = useContext(ImagesContext)
     const { addToCart, cart } = useContext(CartContext)
+    const { authorizedImages } = useContext(AuthContext)
 
     const hasInCart = cart.items.some(item => item.id === currentImage.id)
+    const isAuthorizedImage = authorizedImages.some(
+        img => img._id === currentImage.id
+    )
 
+    console.log(isAuthorizedImage)
     return (
         <Container className="mt-5">
             <Row>
@@ -76,16 +82,28 @@ const ImageDetails = () => {
                                     </p>
                                     <p>{currentImage.description}</p>
 
-                                    <h3>
-                                        {priceFormatter(currentImage.price)}
-                                    </h3>
+                                    {!isAuthorizedImage && (
+                                        <h3>
+                                            {priceFormatter(currentImage.price)}
+                                        </h3>
+                                    )}
 
                                     <div className="mt-5">
-                                        <Buttons
-                                            hasInCart={hasInCart}
-                                            addToCart={addToCart}
-                                            currentImage={currentImage}
-                                        />
+                                        {!isAuthorizedImage && (
+                                            <Buttons
+                                                hasInCart={hasInCart}
+                                                addToCart={addToCart}
+                                                currentImage={currentImage}
+                                            />
+                                        )}
+                                        {isAuthorizedImage && (
+                                            <Button
+                                                variant="danger"
+                                                className="w-100"
+                                            >
+                                                Download
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

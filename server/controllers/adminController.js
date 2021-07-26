@@ -26,8 +26,6 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
         }
     }
 
-    let s3File
-
     if (mainImage) {
         const s3Res = await s3.uploadFile(mainImage[0])
 
