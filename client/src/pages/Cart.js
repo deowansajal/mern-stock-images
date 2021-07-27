@@ -99,20 +99,21 @@ const Cart = () => {
                 </Col>
                 <Col lg={4}>
                     <ListGroup>
+                        <ListGroup.Item>
+                            <h4 className="text-uppercase mb-0 ">
+                                Order Summary
+                            </h4>
+                        </ListGroup.Item>
                         <ListGroup.Item className="d-flex justify-content-between border-bottom-0">
                             <span>Subtotal</span>
                             <span>{priceFormatter(cart.cartSubtotal)}</span>
                         </ListGroup.Item>
-                        <ListGroup.Item className="d-flex justify-content-between border-bottom-0">
-                            <span>Shipping</span>
-                            <span>Free</span>
-                        </ListGroup.Item>
+
                         <ListGroup.Item className="d-flex justify-content-between ">
                             <span>Total</span>
                             <span>{priceFormatter(cart.cartSubtotal)}</span>
                         </ListGroup.Item>
                     </ListGroup>
-
                     <CartCheckoutButton
                         isAuthenticated={isAuthenticated}
                         modalOpenHandler={modalOpenHandler}

@@ -4,14 +4,10 @@ import Icon from '../utils/Icon'
 import { Td } from '../table/Table'
 import priceFormatter from '../utils/priceFormatter'
 
-const tdStyle = {
-    verticalAlign: 'middle',
-}
-
 const CartItem = ({ cartItem, removeFromCart }) => {
     return (
         <tr>
-            <Td style={tdStyle}>
+            <Td>
                 <div
                     style={{
                         maxWidth: '120px',
@@ -25,11 +21,11 @@ const CartItem = ({ cartItem, removeFromCart }) => {
                 </div>
                 {cartItem.name}
             </Td>
-            <Td style={tdStyle}>
+            <Td>
                 {priceFormatter(cartItem.price)} x 1 ={' '}
                 {priceFormatter(cartItem.price)}{' '}
             </Td>
-            <Td style={tdStyle}>
+            <Td>
                 <Icon
                     onClick={() => removeFromCart(cartItem.id)}
                     name="close"

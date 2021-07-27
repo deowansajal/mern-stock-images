@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound'
 import ImageDetails from './pages/ImageDetails'
 import Footer from './components/layout/Footer'
 import Order from './pages/Order'
+import OrderDetails from './pages/OrderDetails'
 
 const App = () => {
     return (
@@ -60,7 +61,15 @@ const App = () => {
                         />
 
                         <PrivateRoute exact path="/me" component={Profile} />
-                        <PrivateRoute path="/me/orders" component={Order} />
+                        <PrivateRoute
+                            exact
+                            path="/me/orders"
+                            component={Order}
+                        />
+                        <PrivateRoute
+                            path="/me/orders/:id"
+                            component={OrderDetails}
+                        />
 
                         <AdminRoute path="/admin" component={Admin} />
                         <AdminRoute

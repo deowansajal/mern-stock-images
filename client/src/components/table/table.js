@@ -29,7 +29,7 @@ export const Td = ({ className, style = {}, children, ...props }) => {
     )
 }
 
-export const THeader = ({ className, titles = [] }) => {
+export const THeader = ({ className, titles = [], thStyle = {} }) => {
     const classes = classNames({
         [className]: classNames,
         'border-bottom-0': true,
@@ -39,7 +39,9 @@ export const THeader = ({ className, titles = [] }) => {
         <thead className={classes}>
             <tr>
                 {titles.map(title => (
-                    <th key={title}>{title}</th>
+                    <th style={{ border: 0, ...thStyle }} key={title}>
+                        {title}
+                    </th>
                 ))}
             </tr>
         </thead>
