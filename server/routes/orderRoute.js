@@ -2,7 +2,8 @@ const router = require('express').Router()
 
 const {
     createOrderController,
-    getAllOrdersByIdController,
+    getOrdersController,
+    getOrderController,
     getOrderCheckoutSessionController,
 } = require('../controllers/orderController')
 
@@ -10,7 +11,8 @@ const { protect } = require('../middleware/auth')
 
 router.post('/', protect, createOrderController)
 
-router.get('/', protect, getAllOrdersByIdController)
+router.get('/', protect, getOrdersController)
+router.get('/:id', protect, getOrderController)
 
 router.get(
     '/checkout-session/:sessionId',

@@ -61,13 +61,14 @@ const useOrder = () => {
     const { orders } = useOrderLoad()
     const { paymentStatus } = useOrderCheckoutSession()
     const { resetCart } = useContext(CartContext)
+    const [orderId, setOrderId] = useState(null)
 
     useEffect(() => {
         if (paymentStatus === 'paid') {
             resetCart()
         }
     }, [paymentStatus, resetCart])
-    return { orders }
+    return { orders, orderId, setOrderId }
 }
 
 export default useOrder

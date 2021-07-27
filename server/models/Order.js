@@ -15,6 +15,7 @@ const OrderSchema = mongoose.Schema(
             {
                 _id: false,
                 id: { type: String, required: true },
+                thumbnail: { type: String, required: true },
                 isUpdated: {
                     type: Boolean,
                     required: true,
@@ -51,7 +52,7 @@ const OrderSchema = mongoose.Schema(
             status: { type: String, required: true, default: 'unpaid' },
             method: String,
         },
-
+        paidAt: Date,
         subscription: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Subscription',

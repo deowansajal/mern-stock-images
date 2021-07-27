@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const Customer = require('../models/Customer')
 const Order = require('../models/Order')
 
@@ -12,6 +14,24 @@ const {
 const asyncHandler = require('../middleware/asyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
+
+exports.getOrderCheckoutSessionController = asyncHandler(
+    async (req, res, next) => {
+        const { sessionId } = req.params
+
+        const session = await getSessionById(sessionId)
+        const { id, name, email } = await getCustomerById(session.customer)
+
+        return sendSuccessResponse({
+            res,
+            message: 'Getting session request successful',
+            data: {
+                paymentStatus: session.payment_status,
+                customer: { id, name, email },
+            },
+        })
+    }
+)
 
 exports.createOrderController = asyncHandler(async (req, res, next) => {
     const { orderItems } = req.body
@@ -43,59 +63,47 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
         mode: session.mode,
     })
 
-    // console.log(order, session)
     res.json({ sessionId: session.id })
 })
 
-exports.getAllOrdersByIdController = asyncHandler(async (req, res, next) => {
+exports.getOrdersController = asyncHandler(async (req, res, next) => {
     const orders = await Order.find({ user: req.user._id })
+        .select('subscription totalPrice payment createdAt mode')
         .populate({
             path: 'subscription',
+            select: 'status',
         })
         .sort('-createdAt')
 
-    const newOrders = orders
-        .map(order => order.toObject())
-        .map(async order => {
-            if (!order.subscription) {
-                return order
-            }
-            let product = await getProductById(
-                order.subscription.plan.productId
-            )
-            order.subscription.plan.name = product
-            return order
-        })
-
-    Promise.all(newOrders).then(data => {
-        return sendSuccessResponse({
-            res,
-            message: 'All Order request successful',
-            data: {
-                orders: data,
-            },
-        })
+    return sendSuccessResponse({
+        res,
+        message: 'All Order request successful',
+        data: {
+            orders,
+        },
     })
-
-    // console.log('prices = ', prices)
 })
 
-exports.getOrderCheckoutSessionController = asyncHandler(
-    async (req, res, next) => {
-        const { sessionId } = req.params
+exports.getOrderController = asyncHandler(async (req, res, next) => {
+    const { id } = req.params
 
-        console.log(sessionId)
-
-        const session = await getSessionById(sessionId)
-        const { id, name, email } = await getCustomerById(session.customer)
-
-        return sendSuccessResponse({
-            res,
-            message: 'Getting session request successful',
-            data: {
-                paymentStatus: session.payment_status,
-                customer: { id, name, email },
-            },
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ErrorResponse({
+            message: 'Invalid Request',
         })
     }
-)
+    const order = await Order.findOne({
+        user: req.user._id,
+        _id: mongoose.Types.ObjectId(id),
+    }).populate({
+        path: 'subscription',
+    })
+
+    return sendSuccessResponse({
+        res,
+        message: 'Get Order request successful',
+        data: {
+            order,
+        },
+    })
+})

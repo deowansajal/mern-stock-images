@@ -1,5 +1,5 @@
 import React from 'react'
-import { OverlayTrigger, Button } from 'react-bootstrap'
+import { OverlayTrigger, Button, ButtonGroup } from 'react-bootstrap'
 
 import SubscriptionPopover from './SubscriptionPopover'
 import useSubscription from '../../hooks/useSubscription'
@@ -20,8 +20,7 @@ const Subscription = ({ order }) => {
                 overlay={<SubscriptionPopover product={product} />}
             >
                 <Button
-                    variant="secondary"
-                    className="mx-2 mb-2 mb-lg-0"
+                    className="mr-2 mb-2 mb-lg-0"
                     onClick={subscribeHandler.bind(null, {
                         priceId: product.price.id,
                         orderId: order._id,
@@ -36,25 +35,12 @@ const Subscription = ({ order }) => {
     if (order.subscription) {
         return (
             <>
-                <Button
-                    variant="outline-success"
-                    size="sm"
-                    className="mr-4"
-                    disabled
-                >
+                <Button variant="outline-success" className="mr-2" disabled>
                     {order.subscription.status}
                 </Button>
 
                 <Button
-                    variant="outline-info"
-                    size="sm"
-                    className="mr-4 my-2"
-                    disabled
-                >
-                    {order.subscription.plan.name}
-                </Button>
-
-                <Button
+                    variant="outline-danger"
                     onClick={manageSubscriptionBillingHandler.bind(null, {
                         subscriptionId: order.subscription.id,
                         priceId: order.subscription.priceId,

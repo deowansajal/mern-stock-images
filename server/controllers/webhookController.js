@@ -31,6 +31,7 @@ const createOrder = async session => {
     order.payment.status = session.payment_status
     order.customer.id = session.customer
     order.customer.email = session.customer_details.email
+    order.paidAt = Date.now()
     const savedOrder = await order.save()
 
     const user = await User.findById(order.user)
@@ -70,6 +71,7 @@ const invoicePaid = async invoiceObj => {
     subscription.invoice.id = invoiceObj.id
     subscription.status = 'active'
     subscription.invoice.status = invoiceObj.status
+
     const savedSubscription = await subscription.save()
 
     const order = await Order.findById(subscription.order)
@@ -109,6 +111,8 @@ const webhookController = asyncHandler(async (req, res) => {
     switch (type) {
         case 'checkout.session.completed':
             const session = data.object
+
+            console.log('checkout.session', session)
 
             if (session.mode === 'payment') {
                 await createOrder(session)

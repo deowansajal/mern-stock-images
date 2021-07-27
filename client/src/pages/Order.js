@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { Container, Table, Button } from 'react-bootstrap'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
@@ -20,16 +21,18 @@ const OrderItem = ({ order }) => {
                 <Subscription order={order} />
             </Td>
             <Td>
-                <Button size="sm" variant="outline-secondary">
-                    Details
-                </Button>
+                <Link to={`/me/orders/${order._id}`}>
+                    <Button size="sm" variant="outline-secondary">
+                        Details
+                    </Button>
+                </Link>
             </Td>
         </tr>
     )
 }
 
 const Order = () => {
-    const { orders } = useOrder()
+    const { orders, setOrderId } = useOrder()
     return (
         <ContainerWrapper>
             <Container fluid="md">
@@ -52,7 +55,11 @@ const Order = () => {
                             />
                             <tbody>
                                 {orders.map(order => (
-                                    <OrderItem key={order._id} order={order} />
+                                    <OrderItem
+                                        key={order._id}
+                                        order={order}
+                                        setOrderId={setOrderId}
+                                    />
                                 ))}
                             </tbody>
                         </Table>
