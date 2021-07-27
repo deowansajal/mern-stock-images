@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useStripe } from '@stripe/react-stripe-js'
 
@@ -6,8 +6,12 @@ const usePriceListLoad = setErrorMessage => {
     const [recurringProducts, setRecurringProducts] = useState([])
 
     useEffect(() => {
+        const cancelTokenSource = axios.CancelToken.source()
+
         axios
-            .get('/api/subscription/pricing')
+            .get('/api/subscription/pricing', {
+                cancelToken: cancelTokenSource.token,
+            })
             .then(({ data }) => {
                 setRecurringProducts(data.data.recurringProducts)
             })
@@ -17,6 +21,8 @@ const usePriceListLoad = setErrorMessage => {
                 }
                 console.log(err)
             })
+
+        return cancelTokenSource.cancel
     }, [setErrorMessage])
 
     return { recurringProducts }
@@ -57,7 +63,6 @@ const useSubscription = () => {
             })
             .then(({ data }) => {
                 window.location.href = data.data.url
-                console.log(data)
             })
             .catch(err => {
                 if (err.response) {

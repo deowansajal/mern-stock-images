@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import useHttp from '../hooks/useHttp'
 import axios from 'axios'
 
 const initialImagesContext = {
@@ -37,16 +36,14 @@ const ImagesProvider = ({ children }) => {
     const [currentImageId, setCurrentImageId] = useState('')
     const [currentImage, setCurrentImage] = useState(getCurrentImage())
 
-    const sendHttpRequest = useHttp()
-
     const getAllImages = useCallback(async () => {
-        return await sendHttpRequest({
+        return await axios({
             url: '/api/images',
         })
-    }, [sendHttpRequest])
+    }, [])
 
     const getSingleImage = async imageId => {
-        return await sendHttpRequest({
+        return await axios({
             url: `/api/images/${imageId}`,
             params: { id: imageId },
         })
@@ -60,10 +57,22 @@ const ImagesProvider = ({ children }) => {
             headers: { 'Content-Type': 'multipart/form-data' },
         })
     }
-    const downloadImage = async imageId => {
-        return await sendHttpRequest({
-            url: `/api/images/${imageId}`,
+    const downloadImage = imageId => {
+        axios({
+            url: `/api/images/download/${imageId}`,
         })
+            .then(({ data }) => {
+                let link = document.createElement('a')
+                console.log(data.data)
+                link.href = data.data.oneTimeDownloadLink
+                link.download = data.data.oneTimeDownloadLink
+                link.click()
+            })
+            .catch(err => {
+                if (err.response) {
+                    setErrorMessage(err.response.data.message)
+                }
+            })
     }
 
     useEffect(() => {

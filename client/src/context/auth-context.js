@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import useHttp from '../hooks/useHttp'
+import axios from 'axios'
 
 const initialAuthContext = {
     isAuthenticated: false,
@@ -51,9 +52,10 @@ const AuthProvider = ({ children }) => {
         setIsAuthenticated(false)
     }
 
-    const getMe = useCallback(async () => {
-        sendHttpRequest({
+    const getMe = useCallback(cancelTokenSource => {
+        axios({
             url: '/api/auth/me',
+            cancelToken: cancelTokenSource.token,
         })
             .then(({ data }) => {
                 setUser(data.data.user)
@@ -64,7 +66,7 @@ const AuthProvider = ({ children }) => {
                 setError(error)
                 setErrorMessage(message)
             })
-    }, [sendHttpRequest])
+    }, [])
 
     const value = {
         login,
@@ -86,9 +88,13 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
+        const cancelTokenSource = axios.CancelToken.source()
+
         if (hasToken) {
-            getMe()
+            getMe(cancelTokenSource)
         }
+
+        return cancelTokenSource.cancel
     }, [getMe, hasToken])
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

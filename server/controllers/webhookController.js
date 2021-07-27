@@ -83,7 +83,7 @@ const customerSubscriptionUpdate = async subscriptionObj => {
         id: subscriptionObj.id,
     })
 
-    console.log('customerSubscriptionUpdate =', subscription)
+    console.log('customerSubscriptionUpdate =', subscriptionObj)
 
     if (!subscription) {
         return
@@ -128,13 +128,6 @@ const webhookController = asyncHandler(async (req, res) => {
         case 'customer.subscription.deleted':
             await customerSubscriptionUpdate(data.object)
             break
-
-        case 'customer.subscription.created':
-            console.log(data.object)
-            break
-        // case 'invoice.payment_failed':
-        //     console.log(data.object)
-        //     break
 
         default:
             console.log(`unHandle event type ${type} = `)

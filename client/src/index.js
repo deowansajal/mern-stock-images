@@ -12,20 +12,24 @@ import ImagesProvider from './context/images-context'
 
 import setAuthorizationHeader from './config/axiosConfig'
 import CartProvider from './context/cart-context'
+import axios from 'axios'
+;(async () => {
+    const { data } = await axios.get('/config')
 
-const stripePromise = loadStripe('pk_test_7hm9ZTecKjQjFa2CVqR9URT500EmAPFMBV')
+    const stripePromise = loadStripe(data.STRIPE_PUBLIC_KEY)
 
-setAuthorizationHeader()
+    setAuthorizationHeader()
 
-ReactDOM.render(
-    <Elements stripe={stripePromise}>
-        <AuthProvider>
-            <ImagesProvider>
-                <CartProvider>
-                    <App />
-                </CartProvider>
-            </ImagesProvider>
-        </AuthProvider>
-    </Elements>,
-    document.getElementById('root')
-)
+    ReactDOM.render(
+        <Elements stripe={stripePromise}>
+            <AuthProvider>
+                <ImagesProvider>
+                    <CartProvider>
+                        <App />
+                    </CartProvider>
+                </ImagesProvider>
+            </AuthProvider>
+        </Elements>,
+        document.getElementById('root')
+    )
+})()

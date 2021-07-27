@@ -6,6 +6,7 @@ import { CartContext } from '../../context/cart-context'
 
 import NavItem from '../navItem/NavItem'
 import Icon from '../utils/Icon'
+import styles from './Header.module.css'
 
 const Header = () => {
     const { isAuthenticated, logout, user } = useContext(AuthContext)
@@ -13,12 +14,12 @@ const Header = () => {
 
     let navItems = (
         <NavDropdown title="Account" className="mr-4 font-weight-bold">
-            <NavDropdown.Item as="span">
+            <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                 <NavItem to="/login" className="text-dark">
                     Login
                 </NavItem>
             </NavDropdown.Item>
-            <NavDropdown.Item as="span">
+            <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                 <NavItem to="/signup" className="text-dark">
                     Signup
                 </NavItem>
@@ -33,17 +34,17 @@ const Header = () => {
                 id="nav-dropdown"
                 className="mr-4 font-weight-bold"
             >
-                <NavDropdown.Item as="span">
+                <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                     <NavItem to="/me" className="text-dark">
                         Profile
                     </NavItem>
                 </NavDropdown.Item>
-                <NavDropdown.Item as="span">
+                <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                     <NavItem to="/me/orders" className="text-dark">
                         Orders
                     </NavItem>
                 </NavDropdown.Item>
-                <NavDropdown.Item as="span">
+                <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                     <NavItem to="/login" onClick={logout} className="text-dark">
                         Logout
                     </NavItem>

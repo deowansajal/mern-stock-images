@@ -1,0 +1,6 @@
+.dropdown-item.active,
+.dropdown-item:active {
+    color: #222 !important;
+    text-decoration: none;
+    background-color: #e9ecef !important;
+}

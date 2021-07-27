@@ -44,7 +44,7 @@ const Buttons = ({ hasInCart, currentImage, addToCart }) => {
 }
 
 const ImageDetails = () => {
-    const { currentImage } = useContext(ImagesContext)
+    const { currentImage, downloadImage } = useContext(ImagesContext)
     const { addToCart, cart } = useContext(CartContext)
     const { authorizedImages } = useContext(AuthContext)
 
@@ -53,7 +53,6 @@ const ImageDetails = () => {
         img => img._id === currentImage.id
     )
 
-    console.log(isAuthorizedImage)
     return (
         <Container className="mt-5">
             <Row>
@@ -98,6 +97,10 @@ const ImageDetails = () => {
                                         )}
                                         {isAuthorizedImage && (
                                             <Button
+                                                onClick={downloadImage.bind(
+                                                    null,
+                                                    currentImage.id
+                                                )}
                                                 variant="danger"
                                                 className="w-100"
                                             >

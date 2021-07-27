@@ -34,7 +34,7 @@ exports.subscribeController = asyncHandler(async (req, res, next) => {
     // const order = await Order.findById(orderId)
 
     // if (order.mode === 'subscription') {
-    //     return new ErrorResponse({
+    //     throw new ErrorResponse({
     //         message: 'You are already subscribed the order',
     //     })
     // }
@@ -80,7 +80,7 @@ exports.manageBillingController = asyncHandler(async (req, res, next) => {
     const hasSubscription = await Subscription.findOne({ id: subscriptionId })
 
     if (!customer || !hasSubscription) {
-        return new ErrorResponse({
+        throw new ErrorResponse({
             statusCode: 403,
             message: 'Forbidden!',
         })

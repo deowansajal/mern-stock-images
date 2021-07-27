@@ -27,6 +27,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 const PORT = process.env.PORT || 4000
 
+// Config routes
+app.get('/config', (req, res, next) => {
+    res.json({
+        STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    })
+})
+
 // Routes
 routes(app)
 
@@ -39,8 +46,6 @@ app.post(
 
 app.use((err, req, res, next) => {
     const { message, error, statusCode = 500, success } = err
-
-    console.log(statusCode)
 
     if (statusCode === 500 || statusCode > 500) {
         console.log(err.message)
