@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { Form } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 
 import FormWrapper from '../components/forms/FormWrapper'
 import { AuthContext } from '../context/auth-context'
@@ -94,6 +94,10 @@ const Login = ({ isCheckout, getLoginSuccessConfirmation }) => {
                         isInvalid={error.password}
                         feedback={error.password && error.password.password}
                     />
+
+                    <p className="text-right mb-0">
+                        <Link to="/forgotpassword">Forgot Password</Link>
+                    </p>
 
                     <SubmitButton>Submit</SubmitButton>
                     {!isCheckout && (

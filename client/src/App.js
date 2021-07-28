@@ -17,6 +17,8 @@ import ImageDetails from './pages/ImageDetails'
 import Footer from './components/layout/Footer'
 import Order from './pages/Order'
 import OrderDetails from './pages/OrderDetails'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 const App = () => {
     return (
@@ -39,6 +41,18 @@ const App = () => {
                         />
 
                         <PublicRoute
+                            path="/forgotpassword"
+                            component={ForgotPassword}
+                            restricted={true}
+                        />
+
+                        <PublicRoute
+                            path="/resetpassword/:resettoken"
+                            component={ResetPassword}
+                            restricted={true}
+                        />
+
+                        <PublicRoute
                             path="/login"
                             component={Login}
                             restricted={true}
@@ -51,7 +65,7 @@ const App = () => {
                             component={Cart}
                         />
 
-                        <Route path="/success" component={Home} />
+                        {/* <Route path="/success" component={Home} /> */}
 
                         <PublicRoute
                             exact

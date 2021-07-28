@@ -5,6 +5,7 @@ const getValidationResult = require('../utils/getValidationResult')
 const sendEmail = require('../utils/sendEmail')
 const createToken = require('../utils/createToken')
 const emailConfirmationTemplate = require('../utils/emailConfirmationTemplate')
+const passwordResetTemplate = require('../utils/passwordResetTemplate')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
 const ErrorResponse = require('../utils/errorResponse')
 
@@ -68,11 +69,9 @@ exports.signupController = asyncHandler(async (req, res, next) => {
     })
 })
 
-/**
- * @desc    Confirm Email
- * @route   GET /api/auth/confirmemail
- * @access  Public
- */
+// @desc    Confirm Email
+// @route   GET /api/auth/confirmemail
+// @access  Public
 exports.confirmEmail = asyncHandler(async (req, res, next) => {
     // grab token from email
     const { token } = req.query
@@ -234,5 +233,81 @@ exports.updateUserProfileController = asyncHandler(async (req, res) => {
         res,
         message: 'User Update successful',
         data: { name: updatedUser.name },
+    })
+})
+
+// @desc      Forgot password
+// @route     POST /api/auth/forgotpassword
+// @access    Public
+exports.forgotPasswordController = asyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email }).select(
+        '+password'
+    )
+
+    if (!user) {
+        throw new ErrorResponse({
+            message: 'There is no user with that email',
+            code: 404,
+        })
+    }
+
+    // Get reset token
+    const resetToken = user.getResetPasswordToken()
+
+    await user.save({ validateBeforeSave: false })
+
+    try {
+        const sendResult = await sendEmail({
+            email: user.email,
+            subject: 'Password Reset',
+            html: passwordResetTemplate(resetToken),
+        })
+
+        sendSuccessResponse({
+            res,
+            message: `You have got an password reset email to ${user.email} please check your inbox`,
+        })
+    } catch (err) {
+        console.log(err)
+        user.resetPasswordToken = undefined
+        user.resetPasswordExpire = undefined
+
+        await user.save({ validateBeforeSave: false })
+
+        throw new ErrorResponse({
+            message: 'Email could not be sent',
+            code: 500,
+        })
+    }
+})
+
+// @desc      Reset password
+// @route     PUT /api/auth/resetpassword/:resettoken
+// @access    Public
+exports.resetPasswordController = asyncHandler(async (req, res, next) => {
+    // Get hashed token
+    const resetPasswordToken = createToken({ token: req.params.resettoken })
+
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+    })
+
+    if (!user) {
+        throw new ErrorResponse({ message: 'Invalid token' })
+    }
+
+    // Set new password
+    user.password = req.body.password
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpire = undefined
+    await user.save()
+
+    const token = user.getSignedJwtToken()
+
+    sendSuccessResponse({
+        res,
+        message: 'Login successful',
+        data: { token: `Bearer ${token}` },
     })
 })

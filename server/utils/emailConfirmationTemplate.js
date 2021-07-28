@@ -6,12 +6,12 @@ const emailConfirmationTemplate = ({ req, confirmEmailToken }) => {
 
     return `
          <div>
-              <p> You are receiving this email because you need to confirm your email address. </p>
+              <h3> You are receiving this email because you need to confirm your email address. </h3>
               <br>
               <br>
-              <button>
-                    <a href="${url}">Verify Your Email</a>
-              </button>
+              <button style="border:none; padding: 1rem; background: #0069D9; color: #fff; text-transform: uppercase;">
+              <a style="color: #fff; text-decoration: none" href="${url}">Verify Your Email </a>
+        </button>
          </div>   
    `
 }
