@@ -9,6 +9,7 @@ const {
     getCustomerById,
     getPriceById,
     getProductById,
+    getInvoiceById,
 } = require('../config/stripe')
 
 const asyncHandler = require('../middleware/asyncHandler')
@@ -92,12 +93,27 @@ exports.getOrderController = asyncHandler(async (req, res, next) => {
             message: 'Invalid Request',
         })
     }
-    const order = await Order.findOne({
+    let order = await Order.findOne({
         user: req.user._id,
         _id: mongoose.Types.ObjectId(id),
     }).populate({
         path: 'subscription',
     })
+
+    if (order.subscription) {
+        const product = await getProductById(order.subscription.plan.productId)
+        const invoice = await getInvoiceById(order.subscription.invoice.id)
+
+        const subscriptionDetails = {
+            productName: product.name,
+            invoicePdf: invoice.invoice_pdf,
+            interval: invoice.lines.data[0].plan.interval,
+            price: invoice.lines.data[0].plan.amount,
+        }
+
+        order = order.toObject()
+        order.subscription.details = subscriptionDetails
+    }
 
     return sendSuccessResponse({
         res,

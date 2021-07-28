@@ -7,7 +7,7 @@ const FormControlGroup = ({
     type = 'text',
     name,
     controlId,
-    value,
+    value = '',
     label,
     isInvalid,
     feedback,

@@ -184,3 +184,55 @@ exports.getMe = asyncHandler(async (req, res, next) => {
         data: { user, images },
     })
 })
+
+// @desc    Update user profile
+// @route   PUT /api/auth/me
+// @access  Private
+exports.updateUserProfileController = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id).select('password')
+
+    if (!req.body.password) {
+        delete req.body.password
+    }
+
+    const { hasError, errors } = getValidationResult({ req })
+
+    if (hasError) {
+        throw new ErrorResponse({
+            message: 'Registration validation failed',
+            error: errors,
+        })
+    }
+
+    const { password, name, confirmPassword } = req.body
+
+    if (!user) {
+        throw new ErrorResponse({
+            code: 403,
+            message: 'Forbidden!',
+        })
+    }
+
+    user.name = name
+
+    if (password) {
+        const isMatch = await user.matchPassword(confirmPassword)
+
+        if (!isMatch) {
+            throw new ErrorResponse({
+                code: 401,
+                message: 'Unauthorized!',
+            })
+        }
+
+        user.password = password
+    }
+
+    const updatedUser = await user.save()
+
+    return sendSuccessResponse({
+        res,
+        message: 'User Update successful',
+        data: { name: updatedUser.name },
+    })
+})

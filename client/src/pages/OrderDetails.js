@@ -1,14 +1,51 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Row, Col, ListGroup, Table, Image } from 'react-bootstrap'
+import {
+    Container,
+    Row,
+    Col,
+    ListGroup,
+    Table,
+    Image,
+    Button,
+} from 'react-bootstrap'
 import axios from 'axios'
 
 import ContainerWrapper from '../components/utils/ContainerWrapper'
 import priceFormatter from '../components/utils/priceFormatter'
 import { THeader, Td } from '../components/table/Table'
 
-const cart = {
-    cartSubtotal: 19300,
+const SubscriptionDetails = ({ subscription }) => {
+    return (
+        <Row className="mt-5">
+            <Col>
+                <ListGroup>
+                    <ListGroup.Item className="border-0">
+                        <h2>SUBSCRIPTION</h2>
+                    </ListGroup.Item>
+                    <ListGroup.Item className=" border border-right-0 border-left-0">
+                        <p>
+                            Product :{' '}
+                            <strong>{subscription.details.productName}</strong>
+                        </p>
+                        <p>
+                            Plan :{' '}
+                            <strong>
+                                {priceFormatter(subscription.details.price)}
+                            </strong>
+                            <small>/ {subscription.details.interval}</small>
+                        </p>
+                        <p>
+                            Status : <strong>{subscription.status}</strong>
+                        </p>
+                        <a href={`${subscription.details.invoicePdf}`}>
+                            <Button>Download Invoice</Button>
+                        </a>
+                    </ListGroup.Item>
+                </ListGroup>
+            </Col>
+        </Row>
+    )
 }
 
 const OrderDetails = () => {
@@ -16,9 +53,16 @@ const OrderDetails = () => {
     const { id } = useParams()
 
     useEffect(() => {
-        axios({ url: `/api/orders/${id}` }).then(({ data }) => {
+        const cancelTokenSource = axios.CancelToken.source()
+
+        axios({
+            url: `/api/orders/${id}`,
+            cancelToken: cancelTokenSource.token,
+        }).then(({ data }) => {
             setOrder(data.data.order)
         })
+
+        return cancelTokenSource.cancel
     }, [id])
 
     return (
@@ -102,6 +146,10 @@ const OrderDetails = () => {
                             </ListGroup>
                         </Col>
                     </Row>
+                )}
+
+                {order && order.subscription && (
+                    <SubscriptionDetails subscription={order.subscription} />
                 )}
             </Container>
         </ContainerWrapper>

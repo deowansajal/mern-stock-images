@@ -33,9 +33,21 @@ const signupValidator = [
         .withMessage('Yor can not signup as admin'),
     passwordValidator(),
 ]
+
 const loginValidator = [emailValidator(), passwordValidator()]
+
+const profileValidator = [
+    nameValidator(),
+    body('password')
+        .optional({ checkFalsy: true })
+        .isString()
+        .isLength({ min: 6, max: 30 })
+        .withMessage(message.minMax({ name: 'Password', min: 6, max: 30 }))
+        .trim(),
+]
 
 module.exports = {
     signupValidator,
     loginValidator,
+    profileValidator,
 }
