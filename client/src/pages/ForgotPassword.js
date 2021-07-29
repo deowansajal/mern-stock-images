@@ -12,7 +12,6 @@ import { AuthContext } from '../context/auth-context'
 const ForgotPassword = () => {
     const [enteredEmail, setEnteredEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const [message, setMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isDone, setIsDone] = useState(false)
     const { setSuccessMessage } = useContext(AuthContext)
