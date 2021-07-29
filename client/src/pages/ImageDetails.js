@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Image, Container, Row, Col, Button } from 'react-bootstrap'
 
@@ -7,6 +7,15 @@ import { CartContext } from '../context/cart-context'
 import priceFormatter from '../components/utils/priceFormatter'
 import GoToShopButton from '../components/buttons/GoToShopButton'
 import { AuthContext } from '../context/auth-context'
+import Icon from '../components/utils/Icon'
+import ImageUpload from '../components/images/ImageUpload'
+import GoBackButton from '../components/buttons/GoBackButton'
+
+const initialImageTextData = {
+    name: '',
+    price: '',
+    description: '',
+}
 
 const Buttons = ({ hasInCart, currentImage, addToCart }) => {
     if (!hasInCart) {
@@ -46,7 +55,21 @@ const Buttons = ({ hasInCart, currentImage, addToCart }) => {
 const ImageDetails = () => {
     const { currentImage, downloadImage } = useContext(ImagesContext)
     const { addToCart, cart } = useContext(CartContext)
-    const { authorizedImages } = useContext(AuthContext)
+    const { authorizedImages, user } = useContext(AuthContext)
+
+    const [isEditMode, setIsEditMode] = useState(false)
+
+    if (isEditMode) {
+        return (
+            <ImageUpload
+                initialImageTextData={{
+                    name: currentImage.name,
+                    price: currentImage.price,
+                    description: currentImage.description,
+                }}
+            />
+        )
+    }
 
     const hasInCart = cart.items.some(item => item.id === currentImage.id)
     const isAuthorizedImage = authorizedImages.some(
@@ -55,6 +78,7 @@ const ImageDetails = () => {
 
     return (
         <Container className="mt-5">
+            <GoBackButton to="/" />
             <Row>
                 <Col sm={12} md={12} lg={7} className="my-5 p-3 border">
                     <div className="d-flex justify-content-center">
@@ -64,6 +88,14 @@ const ImageDetails = () => {
                             alt={`${currentImage.name}`}
                         />
                     </div>
+                    {user.role === 'admin' && (
+                        <Button
+                            onClick={() => setIsEditMode(true)}
+                            variant="outline-danger mt-3 "
+                        >
+                            <Icon name="edit" style={{ fontSize: 28 }} />
+                        </Button>
+                    )}
                 </Col>
                 <Col
                     sm={12}

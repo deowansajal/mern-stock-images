@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom'
 import { AuthContext } from '../../context/auth-context'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-    const { isAuthenticated, user } = React.useContext(AuthContext)
+    const { isAuthenticated } = React.useContext(AuthContext)
     return (
         <Route
             exact
@@ -14,17 +14,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                         <Redirect
                             to={{
                                 pathname: '/login',
-                                state: { from: location },
-                            }}
-                        />
-                    )
-                }
-
-                if (isAuthenticated && user.role && user.role === 'admin') {
-                    return (
-                        <Redirect
-                            to={{
-                                pathname: '/admin',
                                 state: { from: location },
                             }}
                         />

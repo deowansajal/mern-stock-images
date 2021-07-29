@@ -6,6 +6,12 @@ import ToastMessage from '../components/utils/ToastMessage'
 import { ImagesContext } from '../context/images-context'
 import Icon from '../components/utils/Icon'
 
+const initialImageTextData = {
+    name: '',
+    price: '',
+    description: '',
+}
+
 const Admin = () => {
     const [uploadFormIsShown, setUploadFormIsShown] = useState(false)
 
@@ -43,7 +49,9 @@ const Admin = () => {
                 </Button>
             </div>
 
-            {uploadFormIsShown && <ImageUpload />}
+            {uploadFormIsShown && (
+                <ImageUpload initialImageTextData={initialImageTextData} />
+            )}
 
             <Container fluid style={{ marginTop: '5rem' }}>
                 <Images />

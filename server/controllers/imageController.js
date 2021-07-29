@@ -33,10 +33,6 @@ exports.downloadImageController = asyncHandler(async (req, res, next) => {
 
     const oneTimeDownloadLink = await s3.sendSignedUrl(image.mainImage.key)
 
-    console.log('downloading...')
-    console.log('image id = ', id)
-    console.log('user id =', _id)
-
     sendSuccessResponse({
         res,
         message: 'One time download request successful',

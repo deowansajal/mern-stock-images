@@ -19,6 +19,7 @@ import Order from './pages/Order'
 import OrderDetails from './pages/OrderDetails'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import CustomerDetails from './pages/CustomerDetails'
 
 const App = () => {
     return (
@@ -41,6 +42,12 @@ const App = () => {
                         />
 
                         <PublicRoute
+                            path="/login"
+                            component={Login}
+                            restricted={true}
+                        />
+
+                        <PublicRoute
                             path="/forgotpassword"
                             component={ForgotPassword}
                             restricted={true}
@@ -53,19 +60,11 @@ const App = () => {
                         />
 
                         <PublicRoute
-                            path="/login"
-                            component={Login}
-                            restricted={true}
-                        />
-
-                        <PublicRoute
                             exact
                             restricted={false}
                             path="/cart"
                             component={Cart}
                         />
-
-                        {/* <Route path="/success" component={Home} /> */}
 
                         <PublicRoute
                             exact
@@ -75,6 +74,7 @@ const App = () => {
                         />
 
                         <PrivateRoute exact path="/me" component={Profile} />
+
                         <PrivateRoute
                             exact
                             path="/me/orders"
@@ -85,10 +85,15 @@ const App = () => {
                             component={OrderDetails}
                         />
 
-                        <AdminRoute path="/admin" component={Admin} />
+                        <AdminRoute exact path="/upload" component={Admin} />
                         <AdminRoute
-                            path="/admin/customers"
+                            exact
+                            path="/customers"
                             component={Customers}
+                        />
+                        <AdminRoute
+                            path="/customers/:id"
+                            component={CustomerDetails}
                         />
 
                         <Route path="*" component={NotFound} />

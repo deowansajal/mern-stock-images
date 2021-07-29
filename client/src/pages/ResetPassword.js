@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Form } from 'react-bootstrap'
 import axios from 'axios'
 

@@ -111,9 +111,6 @@ const webhookController = asyncHandler(async (req, res) => {
     switch (type) {
         case 'checkout.session.completed':
             const session = data.object
-
-            console.log('checkout.session', session)
-
             if (session.mode === 'payment') {
                 await createOrder(session)
             }

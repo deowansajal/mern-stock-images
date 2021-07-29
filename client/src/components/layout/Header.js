@@ -27,13 +27,34 @@ const Header = () => {
         </NavDropdown>
     )
 
-    if (isAuthenticated && user && user.role !== 'admin') {
+    if (isAuthenticated && user) {
         navItems = (
             <NavDropdown
                 title={user.name && user.name.toUpperCase()}
                 id="nav-dropdown"
                 className="mr-4 font-weight-bold"
             >
+                {user.role === 'admin' && (
+                    <>
+                        <NavDropdown.Item
+                            as="span"
+                            className={styles['dropdown-item']}
+                        >
+                            <NavItem to="/customers" className="text-dark">
+                                Customers
+                            </NavItem>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item
+                            as="span"
+                            className={styles['dropdown-item']}
+                        >
+                            <NavItem to="/upload" className="text-dark">
+                                Upload
+                            </NavItem>
+                        </NavDropdown.Item>
+                    </>
+                )}
+
                 <NavDropdown.Item as="span" className={styles['dropdown-item']}>
                     <NavItem to="/me" className="text-dark">
                         Profile
@@ -53,14 +74,6 @@ const Header = () => {
         )
     }
 
-    if (isAuthenticated && user && user.role === 'admin') {
-        navItems = (
-            <>
-                <NavItem to="/admin">Admin</NavItem>
-                <NavItem to="/admin/customers">Customers</NavItem>
-            </>
-        )
-    }
     return (
         <header className="bg-dark">
             <Container>
@@ -76,23 +89,21 @@ const Header = () => {
                         <Nav className="ml-auto">
                             {navItems}
 
-                            {user.role !== 'admin' && (
-                                <NavItem to="/cart">
-                                    <div className="position-relative">
-                                        <Icon name="shopping_cart" />
-                                        <Badge
-                                            variant="primary"
-                                            style={{
-                                                position: 'absolute',
-                                                top: '-7px',
-                                                right: '-5px',
-                                            }}
-                                        >
-                                            {cart.totalCartItems}
-                                        </Badge>
-                                    </div>
-                                </NavItem>
-                            )}
+                            <NavItem to="/cart">
+                                <div className="position-relative">
+                                    <Icon name="shopping_cart" />
+                                    <Badge
+                                        variant="primary"
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-7px',
+                                            right: '-5px',
+                                        }}
+                                    >
+                                        {cart.totalCartItems}
+                                    </Badge>
+                                </div>
+                            </NavItem>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

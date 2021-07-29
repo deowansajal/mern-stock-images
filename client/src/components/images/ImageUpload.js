@@ -5,16 +5,10 @@ import FormControlGroup from '../forms/FormControlGroup'
 import FormWrapper from '../forms/FormWrapper'
 import { ImagesContext } from '../../context/images-context'
 
-const initialImageTextData = {
-    name: '',
-    price: '',
-    description: '',
-}
-
 const initialMainImageFileLabel = 'Choose main image...'
 const initialThumbnailFileLabel = 'Choose thumbnail...'
 
-const ImageUpload = () => {
+const ImageUpload = ({ initialImageTextData }) => {
     const [mainImageFilename, setMainImageFilename] = useState(
         initialMainImageFileLabel
     )
@@ -94,7 +88,6 @@ const ImageUpload = () => {
     return (
         <>
             <FormWrapper isLoading={isLoading}>
-                {/* <FormTitle title="Upload Images" className="mb-5" /> */}
                 <Form onSubmit={submitHandler}>
                     <Form.Group className="custom-file mb-4">
                         <FormControl
@@ -127,8 +120,6 @@ const ImageUpload = () => {
                         label="Name"
                         controlId="name"
                         value={imageTextData.name}
-                        // isInvalid={error.email}
-                        // feedback={error.email && error.email.email}
                     />
                     <FormControlGroup
                         onChange={changeHandler}
@@ -138,8 +129,6 @@ const ImageUpload = () => {
                         label="Price"
                         controlId="price"
                         value={imageTextData.price}
-                        // isInvalid={error.email}
-                        // feedback={error.email && error.email.email}
                     />
                     <FormControlGroup
                         onChange={changeHandler}
@@ -149,8 +138,6 @@ const ImageUpload = () => {
                         controlId="description"
                         as="textarea"
                         value={imageTextData.description}
-                        // isInvalid={error.password}
-                        // feedback={error.password && error.password.password}
                     />
 
                     <SubmitButton>Submit</SubmitButton>

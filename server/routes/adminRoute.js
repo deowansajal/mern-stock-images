@@ -1,9 +1,15 @@
 const router = require('express').Router()
 
-const { uploadController } = require('../controllers/adminController')
-const imageValidator = require('../middleware/imageValidator')
 const uploadFields = require('../middleware/uploadFields')
+const { protect, isAdmin } = require('../middleware/auth')
+const {
+    uploadController,
+    getCustomersController,
+    getCustomerController,
+} = require('../controllers/adminController')
 
-router.post('/upload', uploadFields, uploadController)
+router.get('/customers/:id', protect, isAdmin, getCustomerController)
+router.get('/customers', protect, isAdmin, getCustomersController)
+router.post('/upload', protect, isAdmin, uploadFields, uploadController)
 
 module.exports = router

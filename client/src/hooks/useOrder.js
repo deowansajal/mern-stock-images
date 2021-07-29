@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import convertQueryStringToObject from '../components/utils/convertQueryStringToObject'
