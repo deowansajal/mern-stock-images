@@ -5,7 +5,6 @@ import { Td } from '../table/Table'
 import priceFormatter from '../utils/priceFormatter'
 
 const CartItem = ({ cartItem, removeFromCart }) => {
-    console.log(cartItem)
     return (
         <tr>
             <Td>

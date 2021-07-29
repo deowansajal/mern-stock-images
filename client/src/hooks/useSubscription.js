@@ -19,7 +19,6 @@ const usePriceListLoad = setErrorMessage => {
                 if (err.response) {
                     setErrorMessage(err.response.data.message)
                 }
-                console.log(err)
             })
 
         return cancelTokenSource.cancel
@@ -49,7 +48,6 @@ const useSubscription = () => {
                 if (err.response) {
                     setErrorMessage(err.response.data.message)
                 }
-                console.log(err)
             })
     }
 
@@ -68,7 +66,6 @@ const useSubscription = () => {
                 if (err.response) {
                     setErrorMessage(err.response.data.message)
                 }
-                console.log(err.message)
             })
     }
 

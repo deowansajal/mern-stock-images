@@ -70,7 +70,6 @@ const ImagesProvider = ({ children }) => {
         })
             .then(({ data }) => {
                 let link = document.createElement('a')
-                console.log(data.data)
                 link.href = data.data.oneTimeDownloadLink
                 link.download = data.data.oneTimeDownloadLink
                 link.click()

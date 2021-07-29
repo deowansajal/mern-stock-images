@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import useHttp from '../hooks/useHttp'
 import axios from 'axios'
 
 const initialAuthContext = {
@@ -30,10 +29,8 @@ const AuthProvider = ({ children }) => {
     const [errorMessage, setErrorMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
-    const sendHttpRequest = useHttp()
-
     const signup = async ({ name, email, password }) => {
-        return await sendHttpRequest({
+        return await axios({
             method: 'post',
             url: '/api/auth/signup',
             data: { name, email, password },
@@ -41,7 +38,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const login = async ({ email, password }) => {
-        return await sendHttpRequest({
+        return await axios({
             method: 'post',
             url: '/api/auth/login',
             data: { email, password },

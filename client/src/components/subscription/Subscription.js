@@ -1,5 +1,5 @@
 import React from 'react'
-import { OverlayTrigger, Button, ButtonGroup } from 'react-bootstrap'
+import { OverlayTrigger, Button } from 'react-bootstrap'
 
 import SubscriptionPopover from './SubscriptionPopover'
 import useSubscription from '../../hooks/useSubscription'

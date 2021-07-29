@@ -11,12 +11,6 @@ import Icon from '../components/utils/Icon'
 import ImageUpload from '../components/images/ImageUpload'
 import GoBackButton from '../components/buttons/GoBackButton'
 
-const initialImageTextData = {
-    name: '',
-    price: '',
-    description: '',
-}
-
 const Buttons = ({ hasInCart, currentImage, addToCart }) => {
     if (!hasInCart) {
         return (

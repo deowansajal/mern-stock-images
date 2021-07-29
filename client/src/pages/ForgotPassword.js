@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Form, Container } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 
@@ -41,7 +41,6 @@ const ForgotPassword = () => {
                 setIsDone(true)
             })
             .catch(err => {
-                console.log(err.message)
                 if (err.response) {
                     setErrorMessage(err.response.data.message)
                 }
