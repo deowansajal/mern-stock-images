@@ -81,6 +81,24 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
                 message: 'Image not found!',
             })
         }
+
+        const orders = await Order.find({
+            'orderItems.id': newImage._id,
+            'orderItems.isUpdated': false,
+            'payment.status': 'paid',
+        })
+
+        if (orders.length > 0) {
+            for (const order of orders) {
+                for (const orderItem of order.orderItems) {
+                    orderItem.isUpdated = true
+                    await order.save()
+                    console.log('orderItems =', orderItem)
+                }
+                // console.log('order =', order)
+            }
+            // console.log('Orders = ', orders)
+        }
     }
 
     await fs.promises.unlink(mainImage[0].path)
