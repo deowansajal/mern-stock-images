@@ -49,13 +49,20 @@ const ImagesProvider = ({ children }) => {
         })
     }
 
-    const uploadImage = async formData => {
-        return await axios({
+    const uploadImage = async (formData, imageId) => {
+        const options = {
             method: 'post',
             url: '/api/admin/upload',
             data: formData,
+            params: {},
             headers: { 'Content-Type': 'multipart/form-data' },
-        })
+        }
+
+        if (imageId) {
+            options.params.imageId = imageId
+        }
+
+        return await axios(options)
     }
     const downloadImage = imageId => {
         axios({

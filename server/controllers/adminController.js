@@ -1,8 +1,9 @@
 const fs = require('fs')
 
+const mongoose = require('mongoose')
+
 const Order = require('../models/Order')
 const User = require('../models/User')
-
 const asyncHandler = require('../middleware/asyncHandler')
 const imageValidator = require('../middleware/imageValidator')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
@@ -10,12 +11,15 @@ const ErrorResponse = require('../utils/ErrorResponse')
 const getValidationResult = require('../utils/getValidationResult')
 const Image = require('../models/Image')
 const s3 = require('../config/s3')
+const { getProductById, getInvoiceById } = require('../config/stripe')
 
 const { getCustomersList, getCustomerById } = require('../config/stripe')
 
 exports.uploadController = asyncHandler(async (req, res, next) => {
     const { mainImage, thumbnail } = req.files
     const { name, price, description } = req.body
+
+    const { imageId } = req.query
 
     let imageData = {
         name,
@@ -58,7 +62,26 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
         throw new ErrorResponse({ message: 'Uploading failed', error: errors })
     }
 
-    const newImage = await Image.create({ ...imageData })
+    let newImage
+
+    if (!imageId) {
+        newImage = await Image.create({ ...imageData })
+    }
+
+    if (imageId) {
+        newImage = await Image.findByIdAndUpdate(
+            imageId,
+            { $set: { ...imageData } },
+            { new: true }
+        )
+
+        if (!newImage) {
+            throw new ErrorResponse({
+                code: 404,
+                message: 'Image not found!',
+            })
+        }
+    }
 
     await fs.promises.unlink(mainImage[0].path)
 
@@ -70,7 +93,7 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
             price,
             description,
             thumbnail: newImage.thumbnail,
-            id: newImage.id,
+            id: newImage._id,
         },
     })
 })
@@ -117,6 +140,44 @@ exports.getCustomerController = asyncHandler(async (req, res, next) => {
             customer,
             orders,
             user,
+        },
+    })
+})
+
+exports.getOrderController = asyncHandler(async (req, res, next) => {
+    const { order: id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ErrorResponse({
+            message: 'Invalid Request',
+        })
+    }
+    let order = await Order.findOne({
+        _id: mongoose.Types.ObjectId(id),
+    }).populate({
+        path: 'subscription',
+    })
+
+    if (order.subscription) {
+        const product = await getProductById(order.subscription.plan.productId)
+        const invoice = await getInvoiceById(order.subscription.invoice.id)
+
+        const subscriptionDetails = {
+            productName: product.name,
+            invoicePdf: invoice.invoice_pdf,
+            interval: invoice.lines.data[0].plan.interval,
+            price: invoice.lines.data[0].plan.amount,
+        }
+
+        order = order.toObject()
+        order.subscription.details = subscriptionDetails
+    }
+
+    return sendSuccessResponse({
+        res,
+        message: 'Get Order request successful',
+        data: {
+            order,
         },
     })
 })

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Table, Container, Button, ListGroup, Row, Col } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { Table, Container, Button, Row, Col } from 'react-bootstrap'
+import { useParams, Link } from 'react-router-dom'
 
 import { THeader, Td } from '../components/table/Table'
 import useCustomer from '../hooks/useCustomer'
@@ -23,25 +23,27 @@ const CustomerDetails = () => {
                     <Col lg={{ span: 5 }}>
                         <h2 className="text-uppercase mb-4">Customer</h2>
                         <div className="border-bottom mb-5">
-                            {Object.keys(customer).map(field => (
-                                <p className="lead" key={field}>
-                                    <strong>
-                                        {field} : {customer[field]}{' '}
-                                    </strong>
-                                </p>
-                            ))}
+                            {customer &&
+                                Object.keys(customer).map(field => (
+                                    <p className="lead" key={field}>
+                                        <strong>
+                                            {field} : {customer[field]}{' '}
+                                        </strong>
+                                    </p>
+                                ))}
                         </div>
                     </Col>
                     <Col lg={{ span: 5, offset: 2 }}>
                         <h2 className="text-uppercase mb-4">User</h2>
                         <div className="border-bottom mb-5">
-                            {Object.keys(user).map(field => (
-                                <p className="lead" key={field}>
-                                    <strong>
-                                        {field} : {user[field]}{' '}
-                                    </strong>
-                                </p>
-                            ))}
+                            {user &&
+                                Object.keys(user).map(field => (
+                                    <p className="lead" key={field}>
+                                        <strong>
+                                            {field} : {user[field]}{' '}
+                                        </strong>
+                                    </p>
+                                ))}
                         </div>
                     </Col>
                 </Row>
@@ -73,15 +75,25 @@ const CustomerDetails = () => {
 
                                         <Td>{order.payment.status}</Td>
                                         <Td>
-                                            {order.subscription &&
-                                                order.subscription.status}
+                                            {order.subscription && (
+                                                <Button
+                                                    variant="outline-success"
+                                                    disabled
+                                                >
+                                                    {order.subscription.status}
+                                                </Button>
+                                            )}
                                             {!order.subscription && 'N/A'}
                                         </Td>
 
                                         <Td>
-                                            <Button variant="outline-primary">
-                                                Details
-                                            </Button>
+                                            <Link
+                                                to={`/customers/${id}/${order._id}`}
+                                            >
+                                                <Button variant="outline-primary">
+                                                    Details
+                                                </Button>
+                                            </Link>
                                         </Td>
                                     </tr>
                                 ))}

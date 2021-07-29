@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react'
 import {
     Container,
     Row,
@@ -9,11 +8,12 @@ import {
     Image,
     Button,
 } from 'react-bootstrap'
-import axios from 'axios'
 
-import ContainerWrapper from '../components/utils/ContainerWrapper'
-import priceFormatter from '../components/utils/priceFormatter'
-import { THeader, Td } from '../components/table/Table'
+import ContainerWrapper from '../utils/ContainerWrapper'
+import priceFormatter from '../utils/priceFormatter'
+import { THeader, Td } from '../table/Table'
+import GoBackButton from '../buttons/GoBackButton'
+import timeFormatter from '../utils/timeFormatter'
 
 const SubscriptionDetails = ({ subscription }) => {
     return (
@@ -48,26 +48,12 @@ const SubscriptionDetails = ({ subscription }) => {
     )
 }
 
-const OrderDetails = () => {
-    const [order, setOrder] = useState(null)
-    const { id } = useParams()
-
-    useEffect(() => {
-        const cancelTokenSource = axios.CancelToken.source()
-
-        axios({
-            url: `/api/orders/${id}`,
-            cancelToken: cancelTokenSource.token,
-        }).then(({ data }) => {
-            setOrder(data.data.order)
-        })
-
-        return cancelTokenSource.cancel
-    }, [id])
-
+const OrderDetails = ({ order, goBackUrl }) => {
     return (
         <ContainerWrapper>
             <Container>
+                <GoBackButton to={goBackUrl} />
+
                 {!order && <p>No Order Found</p>}
 
                 {order && (
@@ -84,10 +70,7 @@ const OrderDetails = () => {
                                     <p>Method : {order.payment.method}</p>
                                     <p>Status : {order.payment.status}</p>
                                     <p>
-                                        Paid at:{' '}
-                                        {new Date(
-                                            order.paidAt
-                                        ).toLocaleString()}{' '}
+                                        Paid at: {timeFormatter(order.paidAt)}
                                     </p>
                                 </ListGroup.Item>
                             </ListGroup>

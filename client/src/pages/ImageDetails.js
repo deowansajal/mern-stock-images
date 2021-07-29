@@ -62,6 +62,7 @@ const ImageDetails = () => {
     if (isEditMode) {
         return (
             <ImageUpload
+                imageId={currentImage.id}
                 initialImageTextData={{
                     name: currentImage.name,
                     price: currentImage.price,

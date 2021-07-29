@@ -16,7 +16,8 @@ import NotFound from './pages/NotFound'
 import ImageDetails from './pages/ImageDetails'
 import Footer from './components/layout/Footer'
 import Order from './pages/Order'
-import OrderDetails from './pages/OrderDetails'
+import AdminOrderDetails from './pages/AdminOrderDetails'
+import CustomerOrderDetails from './pages/CustomerOrderDetails'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import CustomerDetails from './pages/CustomerDetails'
@@ -82,7 +83,7 @@ const App = () => {
                         />
                         <PrivateRoute
                             path="/me/orders/:id"
-                            component={OrderDetails}
+                            component={CustomerOrderDetails}
                         />
 
                         <AdminRoute exact path="/upload" component={Admin} />
@@ -92,8 +93,13 @@ const App = () => {
                             component={Customers}
                         />
                         <AdminRoute
+                            exact
                             path="/customers/:id"
                             component={CustomerDetails}
+                        />
+                        <AdminRoute
+                            path="/customers/:id/:order"
+                            component={AdminOrderDetails}
                         />
 
                         <Route path="*" component={NotFound} />

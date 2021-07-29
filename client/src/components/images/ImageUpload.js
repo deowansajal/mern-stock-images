@@ -8,7 +8,7 @@ import { ImagesContext } from '../../context/images-context'
 const initialMainImageFileLabel = 'Choose main image...'
 const initialThumbnailFileLabel = 'Choose thumbnail...'
 
-const ImageUpload = ({ initialImageTextData }) => {
+const ImageUpload = ({ initialImageTextData, imageId }) => {
     const [mainImageFilename, setMainImageFilename] = useState(
         initialMainImageFileLabel
     )
@@ -59,7 +59,7 @@ const ImageUpload = ({ initialImageTextData }) => {
         formData.append('price', imageTextData.price)
         formData.append('description', imageTextData.description)
 
-        uploadImage(formData)
+        uploadImage(formData, imageId)
             .then(({ data }) => {
                 setImages(previousImages => {
                     return [...previousImages, { ...data.data }]
