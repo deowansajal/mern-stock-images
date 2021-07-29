@@ -11,16 +11,6 @@ const ErrorResponse = require('../utils/errorResponse')
 
 const getAuthorizedImages = require('../utils/getAuthorizedImages')
 
-// Helper only for development
-// @desc      Delete all users
-// @route     DELETE /api/auth/users
-// @access    While developing
-
-exports.deleteAllUsers = asyncHandler(async (req, res, next) => {
-    const deletedUsers = await User.deleteMany({})
-    res.json({ message: 'users deleted success', deletedUsers })
-})
-
 // @desc      Register user
 // @route     POST /api/auth/signup
 // @access    Public
@@ -268,7 +258,6 @@ exports.forgotPasswordController = asyncHandler(async (req, res, next) => {
             message: `You have got an password reset email to ${user.email} please check your inbox`,
         })
     } catch (err) {
-        console.log(err)
         user.resetPasswordToken = undefined
         user.resetPasswordExpire = undefined
 

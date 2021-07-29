@@ -11,6 +11,7 @@ const logMessage = require('./utils/logMessage')
 const webhookController = require('./controllers/webhookController')
 const app = express()
 
+// Check if the request from  webhook
 app.use((req, res, next) => {
     if (req.originalUrl === '/webhook') {
         next()
@@ -51,8 +52,6 @@ app.use((err, req, res, next) => {
         console.log(err.message)
         return res.status(statusCode).json({ message: 'An error occurred' })
     }
-
-    console.log(message, error)
 
     res.status(statusCode).json({
         success,

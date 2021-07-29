@@ -33,7 +33,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     }
 })
 
-// Grant access to specific roles
+// Grant access to admin
 exports.isAdmin = (req, res, next) => {
     if (!req.user) {
         throw new ErrorResponse({

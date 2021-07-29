@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 
-const Customer = require('../models/Customer')
 const Order = require('../models/Order')
 
 const {
@@ -16,6 +15,9 @@ const asyncHandler = require('../middleware/asyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
 
+// @desc      Get  checkout completed session
+// @route     GET /api/orders/checkout-session/:sessionId
+// @access    Private
 exports.getOrderCheckoutSessionController = asyncHandler(
     async (req, res, next) => {
         const { sessionId } = req.params
@@ -34,6 +36,9 @@ exports.getOrderCheckoutSessionController = asyncHandler(
     }
 )
 
+// @desc      Create  order
+// @route     POST /api/orders
+// @access    Private
 exports.createOrderController = asyncHandler(async (req, res, next) => {
     const { orderItems } = req.body
     const { email, _id, customer } = req.user
@@ -67,6 +72,9 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
     res.json({ sessionId: session.id })
 })
 
+// @desc      Get user orders by user id
+// @route     GET /api/orders
+// @access    Private
 exports.getOrdersController = asyncHandler(async (req, res, next) => {
     const orders = await Order.find({ user: req.user._id })
         .select('subscription totalPrice payment createdAt mode')
@@ -75,12 +83,6 @@ exports.getOrdersController = asyncHandler(async (req, res, next) => {
             select: 'status',
         })
         .sort('-createdAt')
-
-
-
-        
-
-
 
     return sendSuccessResponse({
         res,
@@ -91,6 +93,9 @@ exports.getOrdersController = asyncHandler(async (req, res, next) => {
     })
 })
 
+// @desc      Get user order by user and order id
+// @route     GET /api/orders/:id
+// @access    Private
 exports.getOrderController = asyncHandler(async (req, res, next) => {
     const { id } = req.params
 

@@ -4,17 +4,19 @@ const mongoose = require('mongoose')
 
 const Order = require('../models/Order')
 const User = require('../models/User')
+const Image = require('../models/Image')
 const asyncHandler = require('../middleware/asyncHandler')
 const imageValidator = require('../middleware/imageValidator')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
 const ErrorResponse = require('../utils/ErrorResponse')
 const getValidationResult = require('../utils/getValidationResult')
-const Image = require('../models/Image')
 const s3 = require('../config/s3')
 const { getProductById, getInvoiceById } = require('../config/stripe')
-
 const { getCustomersList, getCustomerById } = require('../config/stripe')
 
+// @desc      Upload image
+// @route     POST /api/admin/upload
+// @access    Admin
 exports.uploadController = asyncHandler(async (req, res, next) => {
     const { mainImage, thumbnail } = req.files
     const { name, price, description } = req.body
@@ -93,11 +95,8 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
                 for (const orderItem of order.orderItems) {
                     orderItem.isUpdated = true
                     await order.save()
-                    console.log('orderItems =', orderItem)
                 }
-                // console.log('order =', order)
             }
-            // console.log('Orders = ', orders)
         }
     }
 
@@ -116,6 +115,9 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
     })
 })
 
+// @desc      Get all customers
+// @route     GET /api/admin/customers
+// @access    Admin
 exports.getCustomersController = asyncHandler(async (req, res, next) => {
     const customers = await getCustomersList()
 
@@ -129,6 +131,9 @@ exports.getCustomersController = asyncHandler(async (req, res, next) => {
     })
 })
 
+// @desc      Get single customer by id
+// @route     GET /api/admin/customers/:id
+// @access    Admin
 exports.getCustomerController = asyncHandler(async (req, res, next) => {
     const { id } = req.params
 
@@ -162,6 +167,9 @@ exports.getCustomerController = asyncHandler(async (req, res, next) => {
     })
 })
 
+// @desc      Get customer order bt customer and order id
+// @route     GET /api/admin/customers/:id/:order
+// @access    Admin
 exports.getOrderController = asyncHandler(async (req, res, next) => {
     const { order: id } = req.params
 

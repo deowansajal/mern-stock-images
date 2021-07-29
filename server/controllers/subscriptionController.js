@@ -8,12 +8,11 @@ const stripe = require('../config/stripe')
 const Subscription = require('../models/Subscription')
 
 // @desc      Pricing
-// @route     POST /api/subscription/pricing
+// @route     GET /api/subscription/pricing
 // @access    Private
 exports.getAllPricesListController = asyncHandler(async (req, res, next) => {
     const recurringProducts = await stripe.getRecurringProducts()
 
-    // console.log('recurringProducts', recurringProducts)
     sendSuccessResponse({
         res,
         message: 'Prices list retrieved successfully',
@@ -31,15 +30,13 @@ exports.subscribeController = asyncHandler(async (req, res, next) => {
     const { priceId, orderId } = req.body.data
     const { customer, _id } = req.user
 
-    // const order = await Order.findById(orderId)
+    const order = await Order.findById(orderId)
 
-    // if (order.mode === 'subscription') {
-    //     throw new ErrorResponse({
-    //         message: 'You are already subscribed the order',
-    //     })
-    // }
-
-    console.log('subscription...')
+    if (order.mode === 'subscription') {
+        throw new ErrorResponse({
+            message: 'You are already subscribed the order',
+        })
+    }
 
     const session = await stripe.createSession({
         mode,
@@ -56,8 +53,6 @@ exports.subscribeController = asyncHandler(async (req, res, next) => {
         },
     })
 
-    // console.log('subscription = ', subscription)
-
     sendSuccessResponse({
         res,
         message: 'Prices list retrieved successfully',
@@ -71,12 +66,10 @@ exports.subscribeController = asyncHandler(async (req, res, next) => {
 // @route     POST /api/subscription/manage-billing
 // @access    Private
 exports.manageBillingController = asyncHandler(async (req, res, next) => {
-    console.log('manage billing ...')
     const { customer, _id } = req.user
 
     const { subscriptionId } = req.body.data
 
-    console.log(subscriptionId)
     const hasSubscription = await Subscription.findOne({ id: subscriptionId })
 
     if (!customer || !hasSubscription) {
@@ -87,22 +80,6 @@ exports.manageBillingController = asyncHandler(async (req, res, next) => {
     }
 
     const session = await stripe.createCustomerPortalSession(customer)
-
-    // res.redirect(303, session.url)
-
-    console.log('portal session = ', session)
-    // const subscription = await Subscription.create({
-    //     sessionId: session.id,
-    //     order: orderId,
-    //     user: _id,
-    //     plan: {
-    //         priceId,
-    //     },
-    // })
-
-    // console.log('subscription = ', subscription)
-
-    // res.redirect(se)
 
     sendSuccessResponse({
         res,

@@ -5,18 +5,17 @@ const getAuthorizedImages = require('../utils/getAuthorizedImages')
 const sendSuccessResponse = require('../utils/sendSuccessResponse')
 const ErrorResponse = require('../utils/errorResponse')
 
+// @desc      Get all images
+// @route     GET /api/images
+// @access    Public
 exports.getAllImageController = asyncHandler(async (req, res, next) => {
     const images = await Image.find().select('-mainImage -path')
     res.json({ message: 'get all images', images })
 })
 
-exports.getImageByIdController = asyncHandler(async (req, res, next) => {
-    const image = await Image.find({ _id: req.params.id }).select(
-        '-mainImage -path'
-    )
-    res.json({ message: 'get all image', image })
-})
-
+// @desc      Get  image by id
+// @route     GET /api/images/download/:id
+// @access    Private
 exports.downloadImageController = asyncHandler(async (req, res, next) => {
     const { id } = req.params
     const { _id } = req.user

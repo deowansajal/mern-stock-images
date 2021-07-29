@@ -5,6 +5,7 @@ const Subscription = require('../models/Subscription')
 const User = require('../models/User')
 const Order = require('../models/Order')
 
+// Configure webhook event
 const setEvent = req => {
     const signature = req.headers['stripe-signature']
     let result = {}
@@ -21,6 +22,7 @@ const setEvent = req => {
     return result
 }
 
+// Create an order after checkout session completed
 const createOrder = async session => {
     const order = await Order.findOne({ sessionId: session.id })
 
@@ -35,13 +37,12 @@ const createOrder = async session => {
     const savedOrder = await order.save()
 
     const user = await User.findById(order.user)
-    console.log('user = ', user)
     user.customer = session.customer
     user.images.push(order._id)
-    console.log('user after order push = ', user)
     const savedUser = await user.save()
 }
 
+// Create a subscription after checkout session completed
 const createSubscription = async session => {
     const subscription = await Subscription.findOne({
         sessionId: session.id,
@@ -59,6 +60,7 @@ const createSubscription = async session => {
     }
 }
 
+// Create an invoice after invoice paid
 const invoicePaid = async invoiceObj => {
     const subscription = await Subscription.findOne({
         id: invoiceObj.subscription,
@@ -80,12 +82,11 @@ const invoicePaid = async invoiceObj => {
     const savedOrder = await order.save()
 }
 
+// Update customer subscription after update delete cancel
 const customerSubscriptionUpdate = async subscriptionObj => {
     const subscription = await Subscription.findOne({
         id: subscriptionObj.id,
     })
-
-    console.log('customerSubscriptionUpdate =', subscriptionObj)
 
     if (!subscription) {
         return
@@ -132,7 +133,6 @@ const webhookController = asyncHandler(async (req, res) => {
 
         default:
             console.log(`unHandle event type ${type} = `)
-        // console.log(data.object)
     }
 
     return res.json({ received: true })
