@@ -1,6 +1,3 @@
 /server/node_modules
 /client/node_modules
-/server/config
-/server/playground
-/server/public/uploads
 /node_modules

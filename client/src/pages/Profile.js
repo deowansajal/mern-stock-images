@@ -51,6 +51,12 @@ const Profile = () => {
             },
         })
             .then(({ data }) => {
+                setProfile({
+                    password: '',
+                    confirmPassword: '',
+                    name,
+                    email,
+                })
                 setUser(previousUser => {
                     return { ...previousUser, name: data.data.name }
                 })

@@ -12,20 +12,7 @@ const getAuthorizedImages = async req => {
         },
     })
 
-    const filterOrders = orders.filter(order => {
-        if (order.subscription) {
-            return order
-        }
-
-        order.orderItems = order.orderItems.filter(item => {
-            if (!item.isUpdated) {
-                return item
-            }
-        })
-        return order
-    })
-
-    const images = filterOrders
+    const images = orders
         .reduce((acc, order) => {
             return acc.concat(order.orderItems)
         }, [])

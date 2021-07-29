@@ -70,15 +70,6 @@ exports.manageBillingController = asyncHandler(async (req, res, next) => {
 
     const { subscriptionId } = req.body.data
 
-    const hasSubscription = await Subscription.findOne({ id: subscriptionId })
-
-    if (!customer || !hasSubscription) {
-        throw new ErrorResponse({
-            statusCode: 403,
-            message: 'Forbidden!',
-        })
-    }
-
     const session = await stripe.createCustomerPortalSession(customer)
 
     sendSuccessResponse({

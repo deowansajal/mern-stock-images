@@ -88,7 +88,7 @@ UserSchema.methods.getResetPasswordToken = function () {
     console.log(resetToken)
 
     // Hash token and set to resetPasswordToken field
-    this.resetPasswordToken = createToken({ token: sresetToken })
+    this.resetPasswordToken = createToken({ token: resetToken })
 
     // Set expire
     this.resetPasswordExpire = Date.now() + 10 * 60 * 1000

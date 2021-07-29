@@ -28,6 +28,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 const PORT = process.env.PORT || 4000
 
+// Set special headers
+app.use(helmet())
+
 // Config routes
 app.get('/config', (req, res, next) => {
     res.json({
