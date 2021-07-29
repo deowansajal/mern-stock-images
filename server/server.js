@@ -6,6 +6,7 @@ const connectDB = require('./config/db')
 const routes = require('./routes/routes')
 const stripe = require('stripe')
 const morgan = require('morgan')
+const helmet = require('helmet')
 
 const logMessage = require('./utils/logMessage')
 const webhookController = require('./controllers/webhookController')
