@@ -7,7 +7,6 @@ import { CartContext } from '../context/cart-context'
 const useOrderLoad = () => {
     const [orders, setOrders] = useState([])
     const [errorMessage, setErrorMessage] = useState('')
-    console.log(orders)
 
     useEffect(() => {
         const cancelTokenSource = axios.CancelToken.source()

@@ -11,8 +11,7 @@ const Subscription = require('../models/Subscription')
 // @route     GET /api/subscription/pricing
 // @access    Private
 exports.getAllPricesListController = asyncHandler(async (req, res, next) => {
-    const recurringProducts = await stripe.getTestRecurringProducts()
-    console.log(recurringProducts)
+    const recurringProducts = await stripe.getRecurringProducts()
     sendSuccessResponse({
         res,
         message: 'Prices list retrieved successfully',
@@ -69,6 +68,15 @@ exports.manageBillingController = asyncHandler(async (req, res, next) => {
     const { customer, _id } = req.user
 
     const { subscriptionId } = req.body.data
+
+    const subscription = await Subscription.findById(subscriptionId)
+
+    if (subscription) {
+        throw new ErrorResponse({
+            code: 401,
+            message: 'Unauthorized',
+        })
+    }
 
     const session = await stripe.createCustomerPortalSession(customer)
 

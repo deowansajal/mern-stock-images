@@ -41,7 +41,7 @@ exports.getOrderCheckoutSessionController = asyncHandler(
 // @access    Private
 exports.createOrderController = asyncHandler(async (req, res, next) => {
     const { orderItems } = req.body
-    const { email, _id, customer } = req.user
+    const { _id, customer } = req.user
 
     const session = await createSession({
         customer,
@@ -57,7 +57,7 @@ exports.createOrderController = asyncHandler(async (req, res, next) => {
         return acc + item.price
     }, 0)
 
-    const order = await Order.create({
+    await Order.create({
         user: _id,
         sessionId: session.id,
         orderItems,

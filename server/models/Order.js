@@ -16,11 +16,6 @@ const OrderSchema = mongoose.Schema(
                 _id: false,
                 id: { type: String, required: true },
                 thumbnail: { type: String, required: true },
-                isUpdated: {
-                    type: Boolean,
-                    required: true,
-                    default: false,
-                },
                 price: {
                     type: Number,
                     required: true,

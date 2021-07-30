@@ -34,12 +34,12 @@ const createOrder = async session => {
     order.customer.id = session.customer
     order.customer.email = session.customer_details.email
     order.paidAt = Date.now()
-    const savedOrder = await order.save()
+    await order.save()
 
     const user = await User.findById(order.user)
     user.customer = session.customer
     user.images.push(order._id)
-    const savedUser = await user.save()
+    await user.save()
 }
 
 // Create a subscription after checkout session completed
@@ -63,7 +63,7 @@ const createSubscription = async session => {
         subscription.id = session.subscription
         subscription.customer.id = session.customer
         subscription.payment.status = session.payment_status
-        const savedSubscription = await subscription.save()
+        await subscription.save()
     }
 }
 
@@ -80,13 +80,12 @@ const invoicePaid = async invoiceObj => {
     subscription.invoice.id = invoiceObj.id
     subscription.status = 'active'
     subscription.invoice.status = invoiceObj.status
-
-    const savedSubscription = await subscription.save()
+    await subscription.save()
 
     const order = await Order.findById(subscription.order)
     order.mode = 'subscription'
     order.subscription = subscription._id
-    const savedOrder = await order.save()
+    await order.save()
 }
 
 // Update customer subscription after update delete cancel
@@ -104,7 +103,7 @@ const customerSubscriptionUpdate = async subscriptionObj => {
         subscription.plan.priceId = subscriptionObj.plan.id
         subscription.plan.productId = subscriptionObj.plan.product
     }
-    const savedSubscription = await subscription.save()
+    await subscription.save()
 }
 
 const webhookController = asyncHandler(async (req, res) => {
@@ -120,7 +119,6 @@ const webhookController = asyncHandler(async (req, res) => {
         case 'checkout.session.completed':
             const session = data.object
 
-            console.log('session = ', session)
             if (session.mode === 'payment') {
                 await createOrder(session)
             }
@@ -132,13 +130,11 @@ const webhookController = asyncHandler(async (req, res) => {
             break
 
         case 'invoice.paid':
-            console.log('invoice.paid = ', data.object)
             await invoicePaid(data.object)
             break
 
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':
-            console.log(`${type} =`, data.object)
             await customerSubscriptionUpdate(data.object)
             break
 

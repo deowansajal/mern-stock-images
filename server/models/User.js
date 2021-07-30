@@ -42,18 +42,12 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    twoFactorCode: String,
-    twoFactorCodeExpire: Date,
-    twoFactorEnable: {
-        type: Boolean,
-        default: false,
-    },
+
     createdAt: {
         type: Date,
         default: Date.now,
     },
 })
-
 // Encrypt password using bcrypt
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
