@@ -7,6 +7,7 @@ import { CartContext } from '../context/cart-context'
 const useOrderLoad = () => {
     const [orders, setOrders] = useState([])
     const [errorMessage, setErrorMessage] = useState('')
+    console.log(orders)
 
     useEffect(() => {
         const cancelTokenSource = axios.CancelToken.source()
@@ -15,7 +16,10 @@ const useOrderLoad = () => {
                 cancelToken: cancelTokenSource.token,
             })
             .then(({ data }) => {
-                setOrders([...data.data.orders])
+                const responseOrders = data.data.orders
+                if (JSON.stringify(orders) !== JSON.stringify(responseOrders)) {
+                    setOrders([...responseOrders])
+                }
             })
             .catch(err => {
                 console.log(err.message)
@@ -23,7 +27,7 @@ const useOrderLoad = () => {
             })
 
         return cancelTokenSource.cancel
-    }, [])
+    }, [orders])
 
     return { orders, ordersErrorMessage: errorMessage }
 }

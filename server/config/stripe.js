@@ -78,6 +78,36 @@ exports.getProductById = async id => {
     return product
 }
 
+let products = [
+    {
+        product: 'prod_JtUuXTggJwBDcB',
+        price: 'price_1JFhv5DO38skYAGtv9XVDBVm',
+    },
+    { product: 'prod_JtUtngiznfbTPR', price: 'price_1JFhu7DO38skYAGtn2MPi37K' },
+    { product: 'prod_JtUscChI9CZbq4', price: 'price_1JFhsnDO38skYAGtO66bhepD' },
+]
+
+exports.getTestRecurringProducts = async () => {
+    const newProducts = products.map(async prod => {
+        const product = await stripe.products.retrieve(prod.product)
+        const price = await stripe.prices.retrieve(prod.price)
+        return {
+            productId: product.id,
+            name: product.name,
+            description: product.description,
+            price: {
+                id: price.id,
+                unitAmount: price.unit_amount,
+                type: price.type,
+                recurringInterval: price.recurring.interval,
+            },
+        }
+    })
+
+    const productsResult = await Promise.all(newProducts)
+    return productsResult
+}
+
 // Make recurring product price list object
 const makeRecurringPricesListObject = async prices => {
     const pricesList = prices.map(async price => {
@@ -107,6 +137,8 @@ exports.getRecurringProducts = async (active = true) => {
         active,
         type: 'recurring',
     })
+
+    console.log(prices)
 
     const recurringPricesListObject = await makeRecurringPricesListObject(
         prices.data

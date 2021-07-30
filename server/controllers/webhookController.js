@@ -51,8 +51,15 @@ const createSubscription = async session => {
     if (!subscription) {
         return
     }
+    const order = await Order.findOne({
+        user: subscription.user,
+        _id: subscription.order,
+    })
 
     if (session.payment_status === 'paid') {
+        order.mode = 'subscription'
+        await order.save()
+        subscription.status = 'active'
         subscription.id = session.subscription
         subscription.customer.id = session.customer
         subscription.payment.status = session.payment_status
@@ -112,6 +119,8 @@ const webhookController = asyncHandler(async (req, res) => {
     switch (type) {
         case 'checkout.session.completed':
             const session = data.object
+
+            console.log('session = ', session)
             if (session.mode === 'payment') {
                 await createOrder(session)
             }
@@ -123,11 +132,13 @@ const webhookController = asyncHandler(async (req, res) => {
             break
 
         case 'invoice.paid':
+            console.log('invoice.paid = ', data.object)
             await invoicePaid(data.object)
             break
 
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':
+            console.log(`${type} =`, data.object)
             await customerSubscriptionUpdate(data.object)
             break
 
@@ -135,7 +146,7 @@ const webhookController = asyncHandler(async (req, res) => {
             console.log(`unHandle event type ${type} = `)
     }
 
-    return res.json({ received: true })
+    return res.send({ received: true })
 })
 
 module.exports = webhookController

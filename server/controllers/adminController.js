@@ -110,7 +110,7 @@ exports.uploadController = asyncHandler(async (req, res, next) => {
             price,
             description,
             thumbnail: newImage.thumbnail,
-            id: newImage._id,
+            _id: newImage._id,
         },
     })
 })

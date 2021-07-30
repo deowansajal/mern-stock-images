@@ -11,8 +11,8 @@ const Subscription = require('../models/Subscription')
 // @route     GET /api/subscription/pricing
 // @access    Private
 exports.getAllPricesListController = asyncHandler(async (req, res, next) => {
-    const recurringProducts = await stripe.getRecurringProducts()
-
+    const recurringProducts = await stripe.getTestRecurringProducts()
+    console.log(recurringProducts)
     sendSuccessResponse({
         res,
         message: 'Prices list retrieved successfully',

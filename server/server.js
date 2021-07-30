@@ -15,6 +15,7 @@ const app = express()
 // Check if the request from  webhook
 app.use((req, res, next) => {
     if (req.originalUrl === '/webhook') {
+        console.log('webhook is originalUrl', req.originalUrl)
         next()
     } else {
         express.json()(req, res, next)
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
 })
 
 app.use(express.urlencoded({ extended: false }))
-app.use(cors())
+// app.use(cors())
 
 app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
