@@ -78,6 +78,12 @@ exports.getProductById = async id => {
     return product
 }
 
+// Get Subscription by id
+exports.getSubscriptionById = async id => {
+    const subscription = await stripe.subscriptions.retrieve(id)
+    return subscription
+}
+
 // Make recurring product price list object
 const makeRecurringPricesListObject = async prices => {
     const pricesList = prices.map(async price => {
@@ -111,7 +117,7 @@ exports.getRecurringProducts = async (active = true) => {
     const recurringPricesListObject = await makeRecurringPricesListObject(
         prices.data
     )
-    console.log(recurringPricesListObject)
+    // console.log(recurringPricesListObject)
 
     return recurringPricesListObject.sort(
         (prod1, prod2) => prod1.price.unitAmount - prod2.price.unitAmount

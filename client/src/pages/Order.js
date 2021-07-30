@@ -1,16 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Container, Table, Button } from 'react-bootstrap'
+import { Container, Table, Button, ButtonGroup } from 'react-bootstrap'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
 import { Td, THeader } from '../components/table/Table'
 import priceFormatter from '../components/utils/priceFormatter'
 import timeFormatter from '../components/utils/timeFormatter'
-
+import Icon from '../components/utils/Icon'
 import useOrder from '../hooks/useOrder'
 import Subscription from '../components/subscription/Subscription'
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, orderRefreshHandler }) => {
     return (
         <tr>
             <Td>{order._id}</Td>
@@ -26,13 +26,20 @@ const OrderItem = ({ order }) => {
                         Details
                     </Button>
                 </Link>
+                <Button
+                    onClick={orderRefreshHandler.bind(null, order._id)}
+                    size="sm"
+                    variant="outline-danger ml-3"
+                >
+                    <Icon name="refresh" />
+                </Button>
             </Td>
         </tr>
     )
 }
 
 const Order = () => {
-    const { orders, setOrderId } = useOrder()
+    const { orders, setOrderId, orderRefreshHandler } = useOrder()
     return (
         <ContainerWrapper>
             <Container fluid="md">
@@ -59,6 +66,9 @@ const Order = () => {
                                         key={order._id}
                                         order={order}
                                         setOrderId={setOrderId}
+                                        orderRefreshHandler={
+                                            orderRefreshHandler
+                                        }
                                     />
                                 ))}
                             </tbody>

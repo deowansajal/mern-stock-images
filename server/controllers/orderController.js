@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Order = require('../models/Order')
+const Subscription = require('../models/Subscription')
 
 const {
     createSession,
@@ -9,6 +10,7 @@ const {
     getPriceById,
     getProductById,
     getInvoiceById,
+    getSubscriptionById,
 } = require('../config/stripe')
 
 const asyncHandler = require('../middleware/asyncHandler')
@@ -23,14 +25,18 @@ exports.getOrderCheckoutSessionController = asyncHandler(
         const { sessionId } = req.params
 
         const session = await getSessionById(sessionId)
-        const { id, name, email } = await getCustomerById(session.customer)
+
+        if (!session) {
+            throw new ErrorResponse({
+                message: 'Bad Request',
+            })
+        }
 
         return sendSuccessResponse({
             res,
             message: 'Getting session request successful',
             data: {
                 paymentStatus: session.payment_status,
-                customer: { id, name, email },
             },
         })
     }
@@ -131,6 +137,84 @@ exports.getOrderController = asyncHandler(async (req, res, next) => {
         message: 'Get Order request successful',
         data: {
             order,
+        },
+    })
+})
+
+// @desc      Refresh Order
+// @route     PUT /api/orders/refresh
+// @access    Private
+exports.refreshOrderController = asyncHandler(async (req, res, next) => {
+    const { orderId } = req.body
+
+    const order = await Order.findById(orderId)
+        .select('subscription totalPrice payment createdAt mode sessionId')
+        .populate({
+            path: 'subscription',
+            select: 'status',
+        })
+
+    if (!order) {
+        throw new ErrorResponse({
+            code: 404,
+            message: 'Order not found',
+        })
+    }
+
+    console.log(order)
+
+    const orderSession = await getSessionById(order.sessionId)
+
+    if (orderSession && orderSession.payment_status !== order.payment.status) {
+        order.payment.status = orderSession.payment_status
+        order.customer.id = orderSession.customer
+        order.customer.email = orderSession.customer_details.email
+        order.mode = orderSession.mode
+    }
+
+    const subscription = await Subscription.findOne({ order: order._id })
+    let newOrder
+    if (subscription) {
+        const subscriptionSession = await getSessionById(subscription.sessionId)
+
+        if (!subscriptionSession) {
+            throw new ErrorResponse({
+                message: 'Bad Request',
+            })
+        }
+
+        const stripeSubscription = await getSubscriptionById(
+            subscriptionSession.subscription
+        )
+        if (!stripeSubscription) {
+            throw new ErrorResponse({
+                message: 'Bad Request',
+            })
+        }
+        order.mode = subscriptionSession.mode
+        subscription.payment.status = subscriptionSession.payment_status
+        subscription.id = stripeSubscription.id
+        subscription.customer.id = stripeSubscription.customer
+        subscription.customer.email = order.customer.email
+        subscription.invoice.id = stripeSubscription.latest_invoice
+        subscription.status = stripeSubscription.status
+        subscription.plan.productId = stripeSubscription.plan.product
+        subscription.plan.priceId = stripeSubscription.plan.id
+        order.subscription = subscription._id
+        const savedSubscription = await subscription.save()
+
+        newOrder = savedOrder.toObject()
+        newOrder.subscription = {
+            _id: savedSubscription._id,
+            status: savedSubscription.status,
+        }
+    }
+
+    return sendSuccessResponse({
+        res,
+        message: 'Getting session request successful',
+        data: {
+            order: newOrder,
         },
     })
 })

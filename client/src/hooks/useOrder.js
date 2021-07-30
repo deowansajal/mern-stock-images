@@ -21,14 +21,13 @@ const useOrderLoad = () => {
                 }
             })
             .catch(err => {
-                console.log(err.message)
                 setErrorMessage(err.response.data.message)
             })
 
         return cancelTokenSource.cancel
     }, [orders])
 
-    return { orders, ordersErrorMessage: errorMessage }
+    return { orders, setOrders, ordersErrorMessage: errorMessage }
 }
 
 const useOrderCheckoutSession = () => {
@@ -61,17 +60,47 @@ const useOrderCheckoutSession = () => {
 }
 
 const useOrder = () => {
-    const { orders } = useOrderLoad()
+    const { orders, setOrders } = useOrderLoad()
     const { paymentStatus } = useOrderCheckoutSession()
     const { resetCart } = useContext(CartContext)
     const [orderId, setOrderId] = useState(null)
+
+    const orderRefreshHandler = orderId => {
+        axios({
+            method: 'put',
+            url: '/api/orders/refresh',
+            data: { orderId },
+        })
+            .then(({ data }) => {
+                const refreshOrder = data.data.order
+                const newOrders = orders.map(order => {
+                    if (data.data.order._id !== order._id) {
+                        return order
+                    }
+                    if (order.status !== refreshOrder.status) {
+                        order.status = refreshOrder.status
+                    }
+                    if (refreshOrder.subscription) {
+                        order.subscription.status =
+                            refreshOrder.subscription.status
+                    return order
+                })
+
+                setOrders(newOrders)
+            })
+            .catch(err => {
+                if (err.response) {
+                    console.log(err.response.data.message)
+                }
+            })
+    }
 
     useEffect(() => {
         if (paymentStatus === 'paid') {
             resetCart()
         }
     }, [paymentStatus, resetCart])
-    return { orders, orderId, setOrderId }
+    return { orders, orderId, setOrderId, orderRefreshHandler }
 }
 
 export default useOrder
