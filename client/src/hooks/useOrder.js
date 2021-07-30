@@ -83,6 +83,7 @@ const useOrder = () => {
                     if (refreshOrder.subscription) {
                         order.subscription.status =
                             refreshOrder.subscription.status
+                    }
                     return order
                 })
 
