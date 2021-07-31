@@ -161,15 +161,15 @@ exports.refreshOrderController = asyncHandler(async (req, res, next) => {
         })
     }
 
-    console.log(order)
-
     const orderSession = await getSessionById(order.sessionId)
+    let savedOrder
 
     if (orderSession && orderSession.payment_status !== order.payment.status) {
         order.payment.status = orderSession.payment_status
         order.customer.id = orderSession.customer
         order.customer.email = orderSession.customer_details.email
         order.mode = orderSession.mode
+        savedOrder = await order.save()
     }
 
     const subscription = await Subscription.findOne({ order: order._id })
@@ -210,11 +210,17 @@ exports.refreshOrderController = asyncHandler(async (req, res, next) => {
         }
     }
 
+    const data = {
+        order: savedOrder,
+    }
+
+    if (newOrder) {
+        data.order = newOrder
+    }
+
     return sendSuccessResponse({
         res,
         message: 'Getting session request successful',
-        data: {
-            order: newOrder,
-        },
+        data,
     })
 })
