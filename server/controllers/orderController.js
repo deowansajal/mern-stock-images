@@ -162,18 +162,18 @@ exports.refreshOrderController = asyncHandler(async (req, res, next) => {
     }
 
     const orderSession = await getSessionById(order.sessionId)
-    let savedOrder
 
     if (orderSession && orderSession.payment_status !== order.payment.status) {
         order.payment.status = orderSession.payment_status
         order.customer.id = orderSession.customer
         order.customer.email = orderSession.customer_details.email
         order.mode = orderSession.mode
-        savedOrder = await order.save()
     }
 
     const subscription = await Subscription.findOne({ order: order._id })
+
     let newOrder
+
     if (subscription) {
         const subscriptionSession = await getSessionById(subscription.sessionId)
 
@@ -201,26 +201,27 @@ exports.refreshOrderController = asyncHandler(async (req, res, next) => {
         subscription.plan.productId = stripeSubscription.plan.product
         subscription.plan.priceId = stripeSubscription.plan.id
         order.subscription = subscription._id
-        const savedSubscription = await subscription.save()
+        await subscription.save()
+    }
 
-        newOrder = savedOrder.toObject()
+    const savedOrder = await order.save()
+
+    newOrder = savedOrder.toObject()
+
+    if (subscription) {
         newOrder.subscription = {
-            _id: savedSubscription._id,
-            status: savedSubscription.status,
+            _id: subscription._id,
+            status: subscription.status,
         }
     }
 
-    const data = {
-        order: savedOrder,
-    }
-
-    if (newOrder) {
-        data.order = newOrder
-    }
+    await order.save()
 
     return sendSuccessResponse({
         res,
         message: 'Getting session request successful',
-        data,
+        data: {
+            order: newOrder,
+        },
     })
 })
