@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Container, Table, Button, ButtonGroup } from 'react-bootstrap'
+import { Container, Table, Button, Form } from 'react-bootstrap'
 import ContainerWrapper from '../components/utils/ContainerWrapper'
 import { Td, THeader } from '../components/table/Table'
 import priceFormatter from '../components/utils/priceFormatter'
@@ -26,13 +26,15 @@ const OrderItem = ({ order, orderRefreshHandler }) => {
                         Details
                     </Button>
                 </Link>
-                <Button
-                    onClick={orderRefreshHandler.bind(null, order._id)}
-                    size="sm"
-                    variant="outline-danger ml-3"
-                >
-                    <Icon name="refresh" />
-                </Button>
+                <Form onSubmit={orderRefreshHandler.bind(null, order._id)}>
+                    <Button
+                        type="submit"
+                        size="sm"
+                        variant="outline-danger ml-3"
+                    >
+                        <Icon name="refresh" />
+                    </Button>
+                </Form>
             </Td>
         </tr>
     )

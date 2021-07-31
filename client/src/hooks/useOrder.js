@@ -100,7 +100,7 @@ const useOrder = () => {
         if (paymentStatus === 'paid') {
             resetCart()
         }
-    }, [paymentStatus, resetCart])
+    }, [paymentStatus, resetCart, orders])
     return { orders, orderId, setOrderId, orderRefreshHandler }
 }
 
